@@ -1,33 +1,26 @@
 {% from "docker/map.jinja" import host with context %}
 {%- if host.enabled %}
 
-docker_packages:
-  pkg.installed:
-    - names: 
-
-    python-apt
-
-docker-dependencies:
-   pkg.installed:
-    - pkgs:
-      - iptables
-      - ca-certificates
-      - lxc
+{%- if grains.os == 'Ubuntu' %}
 
 docker_repo:
   pkgrepo.managed:
   - repo: 'deb http://get.docker.io/ubuntu docker main'
   - file: '/etc/apt/sources.list.d/docker.list'
-  - key_url: salt://docker/docker.pgp
+  - key_url: salt://docker/files/docker_apt.pgp
   - require_in:
-    - pkg: lxc-docker
-    - require:
-      - pkg: docker-python-apt
+    - pkg: docker_packages
 
-lxc-docker:
+{%- endif %}
+
+docker_packages:
   pkg.latest:
-    - require:
-      - pkg: docker-dependencies
+  - pkgs: {{ host.pkgs }}
 
-docker:
-  service.running
+docker_service:
+  service.running:
+  - name: {{ host.service }}
+  - require:
+    - pkg: docker_packages
+
+{%- endif %}

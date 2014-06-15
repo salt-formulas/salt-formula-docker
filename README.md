@@ -1,42 +1,23 @@
 
 # Docker
 
-Formulas for working with Docker
+Docker is a platform for developers and sysadmins to develop, ship, and run applications. Docker lets you quickly assemble applications from components and eliminates the friction that can come when shipping code. Docker lets you get your code tested and deployed into production as fast as possible.
+
+Docker is supported on the following systems:
+
+* Debian 8.0 Jessie (64-bit)
+* Ubuntu Trusty 14.04 (LTS) (64-bit)
+* Ubuntu Precise 12.04 (LTS) (64-bit)
+* Ubuntu Raring 13.04 and Saucy 13.10 (64 bit)
 
 ## Sample pillar
 
-    django_pki:
-      server:
+    docker:
+      host:
         enabled: true
-        secret_key: 'y5m^_^ak6+y5m^_y5m^_^ak6+^ak6+5(f...'
-        default_key_length: 2048
-        default_country: 'CZ'
-        passphrase_min_length: 12
-        workers: 3
-        bind:
-          address: 0.0.0.0
-          port: 8642
-          protocol: tcp
-        source:
-          engine: 'git'
-          address: 'git@repo.domain.com:django/django-pki.git'
-          rev: 'master'
-        cache:
-          engine: 'memcached'
-          host: '127.0.0.1'
-          prefix: 'CACHE_DJANGO_PKI'
-        database:
-          engine: 'postgresql'
-          host: '127.0.0.1'
-          name: 'django_pki'
-          password: 'pwd'
-          user: 'django_pki'
-        mail:
-          host: 'mail.domain.com'
-          password: 'mail-pwd'
-          user: 'mail-user'
 
 ## Read more
 
+* https://docs.docker.com/installation/ubuntulinux/
 * https://github.com/saltstack-formulas/docker-formula
-* 
+ 
