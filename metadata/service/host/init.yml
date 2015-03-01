@@ -1,0 +1,6 @@
+applications:
+- docker
+parameters:
+  docker:
+    host:
+      enabled: true
