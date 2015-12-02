@@ -13,7 +13,7 @@
         'service': 'docker'
     },
     'Ubuntu': {
-        'pkgs': ['iptables', 'ca-certificates', 'lxc', 'lxc-docker'],
+        'pkgs': ['docker-engine'],
         'service': 'docker'
     },
 }, grain='os', merge=salt['pillar.get']('docker:host')) %}
