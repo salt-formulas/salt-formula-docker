@@ -1,0 +1,12 @@
+parameters:
+  docker:
+    host:
+      container:
+        registry:
+          image: "registry:2"
+          runoptions:
+            - -e "REGISTRY_STORAGE=inmemory"
+            - -e "GUNICORN_OPTS=[\"--preload\"]"
+            - "--log-driver=syslog"
+            - "-p 5000:5000"
+            - "--rm"

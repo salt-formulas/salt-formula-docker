@@ -1,6 +1,9 @@
 {% from "docker/map.jinja" import host with context %}
 {%- if host.enabled %}
 
+include:
+- .containers
+
 docker_packages:
   pkg.latest:
   - pkgs: {{ host.pkgs }}
@@ -27,5 +30,27 @@ docker_service:
   - name: {{ host.service }}
   - require:
     - pkg: docker_packages
+
+{% if host.install_docker_py %}
+docker-py-requirements:
+  pkg.installed:
+    - name: python-pip
+  pip.installed:
+    - name: pip
+    - upgrade: True
+
+docker-py:
+  pip.installed:
+    {%- if "pip_version" in host %}
+    - name: docker-py {{ host.pip_version }}
+    {%- else %}
+    - name: docker-py
+    {%- endif %}
+    - require:
+      - pkg: docker_packages
+      - pip: docker-py-requirements
+    - reload_modules: True
+{% endif %}
+
 
 {%- endif %}

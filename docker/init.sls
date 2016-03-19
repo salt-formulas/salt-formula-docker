@@ -6,4 +6,7 @@ include:
 {%- if pillar.docker.control is defined %}
 - docker.control
 {%- endif %}
+{%- if pillar.docker.compose is defined %}
+- docker.compose
+{%- endif %}
 {%- endif %}

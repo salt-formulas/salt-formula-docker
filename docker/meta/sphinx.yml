@@ -1,9 +1,0 @@
-doc:
-  name: Docker
-  description: Docker is a platform for developers and sysadmins to develop, ship, and run applications.
-  role:
-  {%- if pillar.docker.host is defined %}
-    host:
-      name: host
-      param: {}
-  {%- endif %}

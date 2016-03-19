@@ -1,0 +1,11 @@
+parameters:
+  docker:
+    compose:
+      container:
+        postgres:
+          restart: always
+          image: postgres:latest
+          volumes_from:
+            - memcached
+          ports:
+            - "5432:5432"

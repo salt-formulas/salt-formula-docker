@@ -1,0 +1,14 @@
+classes:
+- service.docker.compose.container.postgresql
+- service.docker.compose.container.memcached
+parameters:
+  docker:
+    compose:
+      container:
+        postgres:
+          restart: always
+          image: leonardocms/demo:latest
+          volumes_from:
+            - memcached
+          ports:
+            - "5432:5432"
