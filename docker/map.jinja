@@ -2,19 +2,27 @@
 {% set host = salt['grains.filter_by']({
     'CentOS': {
         'pkgs': ['docker-io'],
-        'service': 'docker'
+        'service': 'docker',
+        'container': {},
+        'install_docker_py': False
     },
     'Debian': {
         'pkgs': ['docker.io'],
-        'service': 'docker'
+        'service': 'docker',
+        'container': {},
+        'install_docker_py': False
     },
     'RedHat': {
         'pkgs': ['iptables', 'lxc-docker'],
-        'service': 'docker'
+        'service': 'docker',
+        'container': {},
+        'install_docker_py': False
     },
     'Ubuntu': {
         'pkgs': ['docker-engine'],
-        'service': 'docker'
+        'service': 'docker',
+        'container': {},
+        'install_docker_py': False
     },
 }, grain='os', merge=salt['pillar.get']('docker:host')) %}
 

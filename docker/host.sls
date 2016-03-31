@@ -31,7 +31,7 @@ docker_service:
   - require:
     - pkg: docker_packages
 
-{% if host.install_docker_py is defined and host.install_docker_py %}
+{% if host.install_docker_py %}
 docker-py-requirements:
   pkg.installed:
     - name: python-pip
