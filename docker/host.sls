@@ -8,7 +8,7 @@ docker_packages:
   pkg.latest:
   - pkgs: {{ host.pkgs }}
 
-net.ipv4.ip_forward:
+network.ipv4.ip_forward:
   sysctl.present:
     - value: 1
 
