@@ -10,6 +10,7 @@ docker_packages:
 
 network.ipv4.ip_forward:
   sysctl.present:
+    - name: net.ipv4.ip_forward
     - value: 1
 
 {%- if grains.os == 'Ubuntu' %}
