@@ -52,10 +52,44 @@ Compose
             ports:
               - "5432:5432"
 
+Registry
+--------
+
+.. code-block:: yaml
+
+    docker:
+      registry:
+        log:
+          level: debug
+          formatter: json
+        cache:
+          engine: redis
+          host: localhost
+        storage:
+          engine: filesystem
+          root: /srv/docker/registry
+        bind:
+          host: 0.0.0.0
+          port: 5000
+        hook:
+          mail:
+            levels:
+              - panic
+            # Options are rendered as yaml as is so use hook-specific options here
+            options:
+              smtp:
+                addr: smtp.sendhost.com:25
+                username: sendername
+                password: password
+                insecure: true
+              from: name@sendhost.com
+              to:
+                - name@receivehost.com
+
 
 Read more
 ---------
 
 * https://docs.docker.com/installation/ubuntulinux/
 * https://github.com/saltstack-formulas/docker-formula
- 
+

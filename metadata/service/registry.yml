@@ -1,0 +1,6 @@
+applications:
+- docker
+parameters:
+  docker:
+    registry:
+      enabled: true

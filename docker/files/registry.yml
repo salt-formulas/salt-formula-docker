@@ -1,0 +1,49 @@
+{%- from "docker/map.jinja" import registry with context -%}
+version: 0.1
+log:
+  level: {{ registry.log.level|default('info') }}
+  formatter: {{ registry.log.formatter|default('text') }}
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: {{ registry.cache.engine }}
+  {%- if registry.storage.engine == 'filesystem' %}
+  filesystem:
+    rootdirectory: {{ registry.storage.root }}
+  {%- endif %}
+{%- if registry.cache.engine == redis %}
+redis:
+  addr: {{ registry.cache.get('host', 'localhost') }}:{{ registry.cache.get('port', 6379) }}
+  {%- if registry.cache.password is defined %}
+  password: {{ registry.cache.password }}
+  {%- endif %}
+  {%- if registry.cache.db is defined %}
+  password: {{ registry.cache.db }}
+  {%- endif %}
+{%- endif %}
+http:
+  addr: {{ registry.bind.host }}:{{ registry.bind.port }}
+  {%- if registry.secret is defined %}
+  secret: {{ registry.secret }}
+  {%- endif %}
+  headers:
+    X-Content-Type-Options: [nosniff]
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+{%- if registry.hook is defined %}
+hooks:
+  {%- for type, hook in registry.hooks %}
+  - type: {{ type }}
+    levels:
+      {%- for level in hook.levels %}
+      - {{ level }}
+      {%- endfor %}
+    {%- if hook.options is defined %}
+    options: {{ hook.options|yaml }}
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}

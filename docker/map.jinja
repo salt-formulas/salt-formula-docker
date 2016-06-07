@@ -44,3 +44,21 @@
         'service': 'docker'
     },
 }, grain='os', merge=salt['pillar.get']('docker:compose')) %}
+
+{% set registry = salt['grains.filter_by']({
+    'Debian': {
+        'pkgs': ['docker-registry'],
+        'service': 'docker-registry',
+        'cache': {
+            'engine': 'inmemory',
+        },
+        'storage': {
+            'engine': 'filesystem',
+            'root': '/var/lib/docker-registry',
+        },
+        'bind': {
+            'host': '0.0.0.0',
+            'port': 5000,
+        },
+    },
+}, grain='os', merge=salt['pillar.get']('docker:registry')) %}

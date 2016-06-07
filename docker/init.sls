@@ -9,4 +9,7 @@ include:
 {%- if pillar.docker.compose is defined %}
 - docker.compose
 {%- endif %}
+{%- if pillar.docker.registry is defined %}
+- docker.registry
+{%- endif %}
 {%- endif %}
