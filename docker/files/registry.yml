@@ -1,8 +1,8 @@
 {%- from "docker/map.jinja" import registry with context -%}
 version: 0.1
 log:
-  level: {{ registry.log.level|default('info') }}
-  formatter: {{ registry.log.formatter|default('text') }}
+  level: {{ registry.get('log', {}).level|default('info') }}
+  formatter: {{ registry.get('log', {}).formatter|default('text') }}
   fields:
     service: registry
 storage:
@@ -12,7 +12,7 @@ storage:
   filesystem:
     rootdirectory: {{ registry.storage.root }}
   {%- endif %}
-{%- if registry.cache.engine == redis %}
+{%- if registry.cache.engine == "redis" %}
 redis:
   addr: {{ registry.cache.get('host', 'localhost') }}:{{ registry.cache.get('port', 6379) }}
   {%- if registry.cache.password is defined %}

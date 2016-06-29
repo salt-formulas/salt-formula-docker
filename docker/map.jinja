@@ -46,7 +46,7 @@
 }, grain='os', merge=salt['pillar.get']('docker:compose')) %}
 
 {% set registry = salt['grains.filter_by']({
-    'Debian': {
+    'default': {
         'pkgs': ['docker-registry'],
         'service': 'docker-registry',
         'cache': {

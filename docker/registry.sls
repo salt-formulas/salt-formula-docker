@@ -15,6 +15,7 @@ docker_registry_service:
 
 docker_registry_config:
   file.managed:
+    - name: /etc/docker/registry/config.yml
     - source: salt://docker/files/registry.yml
     - template: jinja
     - require:
