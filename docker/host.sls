@@ -53,5 +53,17 @@ docker-py:
     - reload_modules: True
 {% endif %}
 
+{%- if host.registry is defined %}
+
+{%- for name,registry in host.registry.iteritems() %}
+
+docker_{{ registry.address }}_login:
+  cmd.run:
+  - name: 'docker login -u {{ registry.user }} -p {{ registry.password }} {{ registry.address }}'
+  - unless: grep {{ registry.address }} /root/.docker/config.json
+
+{%- endfor %}
+
+{%- endif %}
 
 {%- endif %}
