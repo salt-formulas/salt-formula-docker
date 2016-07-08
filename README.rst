@@ -86,6 +86,23 @@ Registry
               to:
                 - name@receivehost.com
 
+Docker login to private registry
+--------------------------------
+
+.. code-block:: yaml
+
+    docker:
+      host:
+        enabled: true
+        registry:
+          first:
+            address: private.docker.com
+            user: username
+            password: password
+          second:
+            address: private2.docker.com
+            user: username2
+            password: password2
 
 Read more
 ---------
