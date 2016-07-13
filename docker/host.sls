@@ -29,6 +29,7 @@ network.ipv4.ip_forward:
 docker_service:
   service.running:
   - name: {{ host.service }}
+  - enable: true
   - require:
     - pkg: docker_packages
 

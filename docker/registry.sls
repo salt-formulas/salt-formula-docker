@@ -10,6 +10,7 @@ docker_registry_packages:
 docker_registry_service:
   service.running:
     - name: {{ registry.service }}
+    - enable: true
     - require:
       - pkg: docker_registry_packages
 
