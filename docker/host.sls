@@ -5,7 +5,7 @@ include:
 - .containers
 
 docker_packages:
-  pkg.latest:
+  pkg.installed:
   - pkgs: {{ host.pkgs }}
 
 network.ipv4.ip_forward:
