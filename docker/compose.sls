@@ -14,6 +14,16 @@ docker_python:
     - require:
       - pkg: docker_python
 
+{%- for volume in container.get('volumes', []) %}
+{%- set path = volume.split(':')[0] %}
+{%- if path.startswith('/') %}
+{{ id }}_volume_{{ path }}:
+  file.directory:
+    - name: {{ path }}
+    - makedirs: true
+{%- endif %}
+{%- endfor %}
+
 {{id}}_container:
   dockerng.running:
     - name: {{id}}
