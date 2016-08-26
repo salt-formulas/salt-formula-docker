@@ -40,6 +40,7 @@ docker_python:
 {{id}}_container:
   dockerng.running:
     - name: {{id}}
+    - start: {{ container.start|default(True) }}
     - user: {{ container.user|default("root") }}
     - image: {{container.image}}
   {%- if 'command' in container %}
