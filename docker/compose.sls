@@ -14,14 +14,27 @@ docker_python:
     - require:
       - pkg: docker_python
 
+{%- set binds = {} %}
+{%- set volumes = {} %}
 {%- for volume in container.get('volumes', []) %}
-{%- set path = volume.split(':')[0] %}
+
+{%- set volume_parts = volume.split(':') %}
+{%- set path = volume_parts[0] %}
+
+{%- if volume_parts is iterable and volume_parts|length > 1 %}
+{# volume is bind #}
+{%- do binds.update({volume:volume}) %}
+{%- else %}
+{%- do volumes.update({volume:volume}) %}
+{%- endif %}
+
 {%- if path.startswith('/') %}
 {{ id }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
     - makedirs: true
 {%- endif %}
+
 {%- endfor %}
 
 {{id}}_container:
@@ -44,10 +57,16 @@ docker_python:
       - {{ port }}
     {% endfor %}
   {%- endif %}
-  {%- if 'volumes' in container %}
+  {%- if volumes %}
     - volumes:
-    {%- for volume in container.volumes %}
+    {%- for volume in volumes.iterkeys() %}
       - {{volume}}
+    {%- endfor %}
+  {%- endif %}
+  {%- if binds %}
+    - binds:
+    {%- for bind in binds.iterkeys() %}
+      - {{ bind }}
     {%- endfor %}
   {%- endif %}
   {%- if 'volumes_from' in container %}
