@@ -27,30 +27,18 @@ Containers
     docker:
       host:
         container:
-          registry:
-            image: "registry:2"
-            runoptions:
-              - -e "REGISTRY_STORAGE=inmemory"
-              - -e "GUNICORN_OPTS=[\"--preload\"]"
-              - "--log-driver=syslog"
-              - "-p 5000:5000"
-              - "--rm"
-
-Compose
--------
-
-.. code-block:: yaml
-
-    docker:
-      compose:
-        container:
-          postgres:
-            restart: always
-            image: postgres:latest
-            volumes_from:
-              - memcached
+          jenkins:
+            # Don't start automatically
+            start: false
+            restart: unless-stopped
+            image: jenkins:2.7.1
             ports:
-              - "5432:5432"
+              - 8081:8080
+              - 50000:50000
+            environment:
+              JAVA_OPTS: "-Dhudson.footerURL=https://www.example.com"
+            volumes:
+              - /srv/volumes/jenkins:/var/jenkins_home
 
 Registry
 --------

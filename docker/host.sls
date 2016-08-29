@@ -1,9 +1,6 @@
 {% from "docker/map.jinja" import host with context %}
 {%- if host.enabled %}
 
-include:
-- .containers
-
 docker_packages:
   pkg.installed:
   - pkgs: {{ host.pkgs }}
