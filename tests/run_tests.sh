@@ -130,13 +130,6 @@ run() {
     done
 }
 
-real_run() {
-    for pillar in ${PILLARDIR}/*.sls; do
-        state_name=$(basename ${pillar%.sls})
-        salt_run --id=${state_name} state.sls ${FORMULA_NAME} || (log_err "Execution of ${FORMULA_NAME}.${state_name} failed"; exit 1)
-    done
-}
-
 _atexit() {
     RETVAL=$?
     trap true INT TERM EXIT
@@ -161,9 +154,6 @@ case $1 in
         ;;
     run)
         run
-        ;;
-    real-run)
-        real_run
         ;;
     *)
         prepare

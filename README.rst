@@ -27,6 +27,11 @@ Host
 Client
 ------
 
+Container
+~~~~~~~~~
+
+.. code-block:: yaml
+
     docker:
       client:
         container:
@@ -42,6 +47,35 @@ Client
               JAVA_OPTS: "-Dhudson.footerURL=https://www.example.com"
             volumes:
               - /srv/volumes/jenkins:/var/jenkins_home
+
+Compose
+~~~~~~~
+
+Install docker-compose using Pip (default is distribution package)
+
+.. code-block:: yaml
+
+    docker:
+      client:
+        compose:
+          django_web:
+            # Run up action, any positional argument to docker-compose CLI
+            # If not defined, only docker-compose.yml is generated
+            status: up
+            environment:
+              SOMEVAR: somevalue
+            service:
+              db:
+                image: postgres
+              web:
+                image: djangoapp
+                volumes:
+                  - /srv/volumes/django:/srv/django
+                ports:
+                  - 8000:8000
+                depends_on:
+                  - db
+
 
 Registry
 --------

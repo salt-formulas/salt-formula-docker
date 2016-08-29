@@ -1,0 +1,7 @@
+{%- for key, value in env.iteritems() %}
+{{ key }}="{{ value }}"
+{%- endfor %}
+
+{#-
+  vim: syntax=jinja
+-#}
