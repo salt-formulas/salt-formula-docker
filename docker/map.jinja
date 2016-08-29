@@ -3,47 +3,26 @@
     'CentOS': {
         'pkgs': ['docker-io'],
         'service': 'docker',
-        'container': {},
-        'install_docker_py': False
     },
     'Debian': {
         'pkgs': ['docker.io'],
         'service': 'docker',
-        'container': {},
-        'install_docker_py': False
     },
     'RedHat': {
         'pkgs': ['iptables', 'lxc-docker'],
         'service': 'docker',
-        'container': {},
-        'install_docker_py': False
     },
     'Ubuntu': {
         'pkgs': ['docker-engine', 'python-docker'],
         'service': 'docker',
-        'container': {},
-        'install_docker_py': False
     },
 }, grain='os', merge=salt['pillar.get']('docker:host')) %}
 
-{% set compose = salt['grains.filter_by']({
-    'CentOS': {
-        'pkgs': ['docker-io'],
-        'service': 'docker'
+{% set client = salt['grains.filter_by']({
+    'default': {
+        'pkgs': ['python-docker'],
     },
-    'Debian': {
-        'pkgs': ['docker.io'],
-        'service': 'docker'
-    },
-    'RedHat': {
-        'pkgs': ['iptables', 'lxc-docker'],
-        'service': 'docker'
-    },
-    'Ubuntu': {
-        'pkgs': ['docker-engine'],
-        'service': 'docker'
-    },
-}, grain='os', merge=salt['pillar.get']('docker:compose')) %}
+}, grain='os', merge=salt['pillar.get']('docker:client')) %}
 
 {% set registry = salt['grains.filter_by']({
     'default': {

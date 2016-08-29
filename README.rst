@@ -15,17 +15,20 @@ Docker is supported on the following systems:
 Sample pillar
 -------------
 
+Host
+----
+
 .. code-block:: yaml
 
     docker:
       host:
         enabled: true
 
-Containers
-----------
+Client
+------
 
     docker:
-      host:
+      client:
         container:
           jenkins:
             # Don't start automatically

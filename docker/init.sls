@@ -3,8 +3,8 @@ include:
 {%- if pillar.docker.host is defined %}
 - docker.host
 {%- endif %}
-{%- if pillar.docker.container is defined %}
-- docker.container
+{%- if pillar.docker.client is defined %}
+- docker.client
 {%- endif %}
 {%- if pillar.docker.registry is defined %}
 - docker.registry

@@ -1,10 +1,9 @@
-{%- from "docker/map.jinja" import compose with context %}
+{% from "docker/map.jinja" import client with context %}
 
-docker_python:
-  pkg.installed:
-    - name: python-docker
+include:
+  - docker.client
 
-{%- for name, container in compose.container.items() %}
+{%- for name, container in client.container.items() %}
   {%- set id = name %}
   {%- set required_containers = [] %}
 
