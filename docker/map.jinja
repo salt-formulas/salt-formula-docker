@@ -21,6 +21,13 @@
 {% set client = salt['grains.filter_by']({
     'default': {
         'pkgs': ['python-docker'],
+        'compose': {
+          'base': '/etc/docker/compose',
+          'source': {
+            'engine': 'pkg',
+            'pkgs': ['docker-compose'],
+          },
+        },
     },
 }, grain='os', merge=salt['pillar.get']('docker:client')) %}
 

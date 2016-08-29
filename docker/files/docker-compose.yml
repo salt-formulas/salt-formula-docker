@@ -1,0 +1,12 @@
+version: '2'
+services:
+  {%- for name, srv in service.iteritems() %}
+  {{ name }}:
+    {%- for key, value in srv.iteritems() %}
+    {{ key }}: {{ value }}
+    {%- endfor %}
+  {%- endfor %}
+
+{#-
+  vim: syntax=jinja
+-#}

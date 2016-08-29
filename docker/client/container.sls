@@ -3,7 +3,7 @@
 include:
   - docker.client
 
-{%- for name, container in client.container.items() %}
+{%- for name, container in client.get('container', {}).iteritems() %}
   {%- set id = name %}
   {%- set required_containers = [] %}
 
