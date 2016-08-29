@@ -1,6 +1,0 @@
-applications:
-- docker
-parameters:
-  docker:
-    compose:
-      enabled: true
