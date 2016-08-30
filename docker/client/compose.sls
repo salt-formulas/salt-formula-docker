@@ -2,6 +2,9 @@
 
 include:
   - docker.client
+  {%- if client.compose.source.engine == 'docker' %}
+  - docker.host
+  {%- endif %}
 
 {%- if client.compose.source.engine == 'pkg' %}
 docker_compose:
@@ -17,6 +20,21 @@ docker_compose:
     - name: docker-compose
     - require:
       - pkg: docker_compose_python_pip
+{%- elif client.compose.source.engine == 'docker' %}
+docker_compose_wrapper:
+  file.managed:
+    - name: /usr/local/bin/docker-compose
+    - source: salt://docker/files/docker-compose
+    - template: jinja
+    - defaults:
+        image: {{ client.compose.source.image|default('docker/compose') }}
+    - mode: 755
+
+docker_compose:
+  cmd.wait:
+    - name: /usr/local/bin/docker-compose version
+    - watch:
+      - file: docker_compose_wrapper
 {%- endif %}
 
 {%- for app, compose in client.compose.iteritems() %}
@@ -68,6 +86,8 @@ docker_{{ app }}_{{ compose.status }}:
         - pkg: docker_compose
         {%- elif client.compose.source.engine == 'pip' %}
         - pip: docker_compose
+        {%- elif client.compose.source.engine == 'docker' %}
+        - cmd: docker_compose
         {%- endif %}
     - watch_in:
       - file: docker_{{ app }}_env

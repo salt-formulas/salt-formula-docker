@@ -51,13 +51,22 @@ Container
 Compose
 ~~~~~~~
 
-Install docker-compose using Pip (default is distribution package)
+There are three options how to install docker-compose:
+
+- distribution package (default)
+- using Pip
+- using Docker container
+
+Install docker-compose using Docker (default is distribution package)
 
 .. code-block:: yaml
 
     docker:
       client:
         compose:
+          source:
+            engine: docker
+            image: docker/compose:1.8.0
           django_web:
             # Run up action, any positional argument to docker-compose CLI
             # If not defined, only docker-compose.yml is generated
