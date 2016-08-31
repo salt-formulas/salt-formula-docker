@@ -1,10 +1,15 @@
 version: '2'
 services:
   {%- for name, srv in service.iteritems() %}
+  {%- set env_file_set = False %}
   {{ name }}:
     {%- for key, value in srv.iteritems() %}
+    {%- if key == 'env_file' %}{%- set env_file_set = True %}{%- endif %}
     {{ key }}: {{ value }}
     {%- endfor %}
+    {%- if not env_file_set and compose.environment is defined %}
+    env_file: .env
+    {%- endif %}
   {%- endfor %}
 
 {#-

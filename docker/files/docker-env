@@ -1,5 +1,5 @@
 {%- for key, value in env.iteritems() %}
-{{ key }}="{{ value }}"
+{{ key }}={{ value }}
 {%- endfor %}
 
 {#-

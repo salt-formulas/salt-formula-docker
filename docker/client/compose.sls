@@ -51,7 +51,7 @@ docker_{{ app }}_compose:
     - source: salt://docker/files/docker-compose.yml
     - template: jinja
     - defaults:
-        app: {{ app }}
+        compose: {{ compose }}
         service: {{ compose.service }}
     - require:
         - file: docker_{{ app }}_dir
