@@ -23,6 +23,8 @@ Host
     docker:
       host:
         enabled: true
+        insecure_registries:
+          - 127.0.0.1
 
 Client
 ------

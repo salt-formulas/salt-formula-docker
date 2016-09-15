@@ -23,6 +23,15 @@ network.ipv4.ip_forward:
 
 {%- endif %}
 
+/etc/docker/daemon.json:
+  file.managed:
+  - source: salt://docker/files/daemon.json
+  - template: jinja
+  - require:
+    - pkg: docker_packages
+  - watch_in:
+    - service: docker_service
+
 docker_service:
   service.running:
   - name: {{ host.service }}

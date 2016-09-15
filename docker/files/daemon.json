@@ -1,0 +1,13 @@
+{% from "docker/map.jinja" import host with context %}
+{
+  {%- if host.insecure_registries is defined %}
+  "insecure-registries": [
+    {%- for registry in host.insecure_registries %}
+    "{{ registry }}"{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+  {%- endif %}
+}
+{#-
+  vim: syntax=jinja
+-#}
