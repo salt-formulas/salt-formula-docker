@@ -89,7 +89,7 @@ docker_{{ app }}_{{ compose.status }}:
         {%- elif client.compose.source.engine == 'docker' %}
         - cmd: docker_compose
         {%- endif %}
-    - watch_in:
+    - watch:
       - file: docker_{{ app }}_env
       - file: docker_{{ app }}_compose
 {%- endif %}
