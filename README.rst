@@ -73,6 +73,9 @@ Install docker-compose using Docker (default is distribution package)
             # Run up action, any positional argument to docker-compose CLI
             # If not defined, only docker-compose.yml is generated
             status: up
+            # Run image pull every time state is run triggering container
+            # restart in case it's changed
+            pull: true
             environment:
               SOMEVAR: somevalue
             service:

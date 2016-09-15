@@ -74,6 +74,35 @@ docker_{{ app }}_env:
     - name: {{ client.compose.base }}/{{ app }}/.env
 {%- endif %}
 
+{#
+TODO: These both resources (pull and state) can't be idempotent due to absence
+of dry-run in docker-compose.
+See https://github.com/docker/compose/issues/1203
+#}
+{%- if compose.pull|default(False) == True %}
+docker_{{ app }}_pull:
+  cmd.run:
+    - name: '{% if client.compose.source.engine == 'pip' %}/usr/local/bin/{%
+    endif %}docker-compose pull'
+    - cwd: {{ client.compose.base }}/{{ app }}
+    - user: {{ compose.user|default("root") }}
+    - require:
+        {%- if client.compose.source.engine == 'pkg' %}
+        - pkg: docker_compose
+        {%- elif client.compose.source.engine == 'pip' %}
+        - pip: docker_compose
+        {%- elif client.compose.source.engine == 'docker' %}
+        - cmd: docker_compose
+        {%- endif %}
+    - watch:
+      - file: docker_{{ app }}_env
+      - file: docker_{{ app }}_compose
+    {%- if compose.status is defined %}
+    - watch_in:
+      - cmd: docker_{{ app }}_{{ compose.status }}
+    {%- endif %}
+{%- endif %}
+
 {%- if compose.status is defined %}
 docker_{{ app }}_{{ compose.status }}:
   cmd.run:
