@@ -26,6 +26,43 @@ Host
         insecure_registries:
           - 127.0.0.1
 
+Swarm
+-----
+
+Role can be master, manager or worker. Where master is the first manager that
+will initialize the swarm.
+
+Metadata for manager (first node):
+
+.. code-block:: yaml
+
+    docker:
+      host:
+        enabled: true
+      swarm:
+        role: manager
+        advertise_addr: 192.168.1.5
+        bind:
+          address: 192.168.1.5
+          port: 2377
+
+Metadata for worker:
+
+.. code-block:: yaml
+
+    docker:
+      host:
+        enabled: true
+      swarm:
+        role: worker
+        master:
+          host: 192.168.1.5
+          port: 2377
+
+Token to join to master node is obtained from grains using salt.mine.  In case
+of any ``join_token undefined`` issues, ensure you have ``docker_swarm_``
+grains available.
+
 Client
 ------
 
