@@ -18,6 +18,14 @@
     },
 }, grain='os', merge=salt['pillar.get']('docker:host')) %}
 
+{% set swarm = salt['grains.filter_by']({
+    'default': {
+        'master': {
+            'port': 2377
+        }
+    }
+}, grain='os', merge=salt['pillar.get']('docker:swarm')) %}
+
 {% set client = salt['grains.filter_by']({
     'default': {
         'pkgs': ['python-docker'],
