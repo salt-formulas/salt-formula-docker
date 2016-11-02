@@ -6,6 +6,9 @@ include:
   {%- if client.compose is defined %}
   - docker.client.compose
   {%- endif %}
+  {%- if client.service is defined %}
+  - docker.client.service
+  {%- endif %}
 
 docker_python:
   pkg.installed:
