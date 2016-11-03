@@ -25,6 +25,9 @@ Host
         enabled: true
         insecure_registries:
           - 127.0.0.1
+        log:
+          engine: json-file
+          size: 50m
 
 Swarm
 -----
