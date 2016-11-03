@@ -127,6 +127,33 @@ Install docker-compose using Docker (default is distribution package)
                 depends_on:
                   - db
 
+Service
+-------
+
+To deploy service in Swarm mode, you can use ``docker.client.service``:
+
+.. code-block:: yaml
+
+    parameters:
+      docker:
+        client:
+          service:
+            postgresql:
+              environment:
+                POSTGRES_USER: user
+                POSTGRES_PASSWORD: password
+                POSTGRES_DB: mydb
+              restart:
+                condition: on-failure
+              image: "postgres:9.5"
+              ports:
+                - 5432:5432
+              volume:
+                data:
+                  type: bind
+                  source: /srv/volumes/postgresql/maas
+                  destination: /var/lib/postgresql/data
+
 
 Registry
 --------
