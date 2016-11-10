@@ -29,6 +29,8 @@ docker_service_{{ name }}_create:
         {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
         {{ service.image }}
+        {%- if service.command is defined %} {{ command }}{%- endif %}
+        {%- for arg in service.get('args', []) %} {{ arg }}{%- endif %}
     - unless: "docker service ls | grep {{ name }}"
 
 {%- if service.get('update_service', False) %}
