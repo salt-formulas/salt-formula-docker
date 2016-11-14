@@ -12,7 +12,7 @@ docker_swarm_init:
         docker swarm init
         {%- if swarm.advertise_addr is defined %} --advertise-addr {{ swarm.advertise_addr }}{%- endif %}
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
-    - unless: "test -e /var/lib/docker/swarm/control.sock"
+    - unless: "test -e /var/lib/docker/swarm/state.json"
     - require:
       - service: docker_service
 
@@ -36,7 +36,7 @@ docker_swarm_join:
         {%- if swarm.advertise_addr is defined %} --advertise-addr {{ swarm.advertise_addr }}{%- endif %}
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
         {{ swarm.master.host }}:{{ swarm.master.port }}
-    - unless: "test -e /var/lib/docker/swarm/control.sock"
+    - unless: "test -e /var/lib/docker/swarm/state.json"
     - require:
       - service: docker_service
 
