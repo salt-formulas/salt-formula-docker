@@ -1,5 +1,7 @@
 applications:
 - docker
+classes:
+  - service.docker.support
 parameters:
   docker:
     client:

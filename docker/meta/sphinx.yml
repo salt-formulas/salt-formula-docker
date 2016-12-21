@@ -1,0 +1,44 @@
+doc:
+  name: Docker
+  description: Docker is an open source project to pack, ship and run any application as a lightweight container.
+  role:
+    {%- if pillar.docker.host is defined %}
+    host:
+      name: host
+      param:
+        version:
+          value: "{{ salt['cmd.run']('docker --version') }}"
+    {%- endif %}
+    {%- if pillar.docker.swarm is defined %}
+    {%- from "docker/map.jinja" import swarm with context %}
+    swarm:
+      name: swarm
+      param:
+        role:
+          value: {{ swarm.role }}
+        {%- if swarm.role != "master" %}
+        master:
+          value: "{{ swarm.master.host }}:{{ swarm.master.port }}"
+        {%- endif %}
+        advertise_addr:
+          value: {{ swarm.advertise_addr }}
+    {%- endif %}
+    {%- if pillar.docker.client is defined %}
+    {%- from "docker/map.jinja" import client with context %}
+    client:
+      name: client
+      param:
+        source:
+          value:
+            engine: {{ client.compose.source.engine }}
+            {%- if client.compose.source.engine == 'docker' %}
+            image: {{ client.compose.source.image|default('docker-compose') }}
+            {%- endif %}
+        {%- if client.get('service', {}) %}
+        services:
+          value:
+            {%- for name, service in client.service.iteritems() %}
+            - "{{ name }} (image {{ service.image }})"
+            {%- endfor %}
+        {%- endif %}
+    {%- endif %}
