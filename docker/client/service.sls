@@ -6,6 +6,16 @@ include:
 {%- for name, service in client.get('service', {}).iteritems() %}
 {%- if service.get('enabled', True) %}
 
+{%- for vname, volume in service.get('volume', {}).iteritems() %}
+{%- if volume.get('type', 'bind') == 'bind' %}
+docker_service_{{ name }}_volume_{{ vname }}:
+  file.directory:
+    - name: {{ volume.source }}
+    - makedirs: true
+    - unless: "test -e {{ volume.source }}"
+{%- endif %}
+{%- endfor %}
+
 docker_service_{{ name }}_create:
   cmd.run:
     - name: >
