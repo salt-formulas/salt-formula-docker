@@ -10,7 +10,11 @@ def main():
     output = {}
 
     if os.path.exists('/var/lib/docker/swarm'):
-        inspect = json.loads(subprocess.check_output(["docker", "node", "inspect", "self"]).strip())[0]
+        try:
+            inspect = json.loads(subprocess.check_output(["docker", "node", "inspect", "self"]).strip())[0]
+        except subprocess.CalledProcessError:
+            return None
+
         output['docker_swarm_role'] = inspect["Spec"]["Role"]
         try:
             output['docker_swarm_leader'] = inspect["ManagerStatus"]["Leader"]
