@@ -11,7 +11,7 @@ def main():
 
     if os.path.exists('/var/lib/docker/swarm'):
         try:
-            inspect = json.loads(subprocess.check_output(["docker", "node", "inspect", "self"]).strip())[0]
+            inspect = json.loads(subprocess.check_output(["docker", "node", "inspect", "self"], stderr=subprocess.STDOUT).strip())[0]
         except subprocess.CalledProcessError:
             return None
 
