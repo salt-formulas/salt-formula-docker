@@ -2,6 +2,9 @@
 {%- if client.enabled %}
 
 include:
+  {%- if client.network is defined %}
+  - docker.client.network
+  {%- endif %}
   - docker.client.container
   {%- if client.compose is defined %}
   - docker.client.compose
