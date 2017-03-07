@@ -1,9 +1,24 @@
 {% from "docker/map.jinja" import host with context %}
+{% from "linux/map.jinja" import system with context %}
+
+
 {%- if host.enabled %}
+
+linux_packages:
+  pkg.installed:
+    - pkgs: {{ system.pkgs }}
+
+include:
+  - linux.system.repo
 
 docker_packages:
   pkg.installed:
-  - pkgs: {{ host.pkgs }}
+    - refresh: True
+    - pkgs: {{ host.pkgs }}
+
+update:
+  cmd.run:
+  - name: 'apt-get update'
 
 network.ipv4.ip_forward:
   sysctl.present:
@@ -18,8 +33,10 @@ network.ipv4.ip_forward:
   - template: jinja
   - require:
     - pkg: docker_packages
+  {%- if not grains.get('noservices','false')%}
   - watch_in:
     - service: docker_service
+  {%- endif %}
 
 {%- endif %}
 
@@ -27,10 +44,15 @@ network.ipv4.ip_forward:
   file.managed:
   - source: salt://docker/files/daemon.json
   - template: jinja
+  - makedirs: True
   - require:
     - pkg: docker_packages
+  {%- if not grains.get('noservices','false')%}
   - watch_in:
     - service: docker_service
+  {%- endif %}
+
+{%- if not grains.get('noservices','false')%}
 
 docker_service:
   service.running:
@@ -38,6 +60,9 @@ docker_service:
   - enable: true
   - require:
     - pkg: docker_packages
+
+{%- endif %}
+
 
 {%- if host.registry is defined %}
 

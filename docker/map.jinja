@@ -1,4 +1,3 @@
-
 {% set host = salt['grains.filter_by']({
     'CentOS': {
         'pkgs': ['docker-io'],
@@ -12,11 +11,16 @@
         'pkgs': ['iptables', 'lxc-docker'],
         'service': 'docker',
     },
-    'Ubuntu': {
+}, merge=salt['grains.filter_by']({
+    'trusty': {
+        'pkgs': ['docker-engine'],
+        'service': 'docker',
+    },
+    'xenial': {
         'pkgs': ['docker-engine', 'python-docker'],
         'service': 'docker',
     },
-}, grain='os', merge=salt['pillar.get']('docker:host')) %}
+}, grain='oscodename', merge=salt['pillar.get']('docker:host'))) %}
 
 {% set swarm = salt['grains.filter_by']({
     'default': {
@@ -25,6 +29,7 @@
         }
     }
 }, grain='os', merge=salt['pillar.get']('docker:swarm')) %}
+
 
 {% set client = salt['grains.filter_by']({
     'default': {
@@ -37,7 +42,18 @@
           },
         },
     },
-}, grain='os', merge=salt['pillar.get']('docker:client')) %}
+}, merge=salt['grains.filter_by']({
+    'trusty': {
+        'compose': {
+          'base': '/etc/docker/compose',
+          'source': {
+            'engine': 'pkg',
+            'pkgs': ['docker-compose'],
+          },
+        },
+    },
+}, grain='oscodename', merge=salt['pillar.get']('docker:client'))) %}
+
 
 {% set registry = salt['grains.filter_by']({
     'default': {
