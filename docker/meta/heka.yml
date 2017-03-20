@@ -1,0 +1,37 @@
+{% from "docker/map.jinja" import host with context %}
+
+{%- if host.enabled %}
+metric_collector:
+  trigger:
+    docker-local-check:
+      description: 'Docker is locally down'
+      severity: down
+      rules:
+      - metric: docker_check
+        relational_operator: '=='
+        threshold: 0
+        window: 90
+        periods: 0
+        function: last
+  alarm:
+    docker-check:
+      triggers:
+      - docker-local-check
+      dimension:
+          service: docker-check
+
+aggregator:
+  alarm_cluster:
+    docker:
+      policy: availability_of_members
+      alerting: enabled_with_notification
+      group_by: hostname
+      match:
+        service: docker-check
+      members:
+      - docker-check
+      dimension:
+        cluster_name: docker
+        nagios_host: 00-top-clusters
+
+{%- endif %}

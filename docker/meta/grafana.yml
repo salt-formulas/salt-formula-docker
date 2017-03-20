@@ -1,0 +1,19 @@
+dashboard:
+  docker:
+    format: json
+    template: docker/files/grafana_dashboards/docker_influxdb.json
+  main:
+    row:
+      docker-data-plane:
+        title: Docker
+        panel:
+          docker:
+            title: Docker
+            links:
+            - dashboard: Docker
+              title: Docker
+              type: dashboard
+            target:
+              cluster_status:
+                rawQuery: true
+                query: SELECT last(value) FROM cluster_status WHERE cluster_name = 'docker' AND environment_label = '$environment' AND $timeFilter GROUP BY time($interval) fill(null)
