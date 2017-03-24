@@ -4,6 +4,34 @@
 include:
   - docker.host
 
+{%- for name, network in swarm.get('network', {}).iteritems() %}
+{%- if network.get('enabled', True) %}
+
+docker_swarm_network_{{ name }}_create:
+  cmd.run:
+    - name: >
+        docker network create
+        {%- if network.get('attachable', False) %} --attachable {%- endif %}
+        {%- if network.get('internal', False) %} --internal {%- endif %}
+        {%- if network.get('ipv6', False) %} --ipv6 {%- endif %}
+        {%- if network.driver is defined %} --driver {{ network.driver }} {%- endif %}
+        {%- if network.gateway is defined %} --gateway {{ network.gateway }} {%- endif %}
+        {%- if network.iprange is defined %} --ip-range {{ network.iprange }} {%- endif %}
+        {%- if network.ipamdriver is defined %} --ipam-driver {{ network.ipamdriver }} {%- endif %}
+        {%- if network.subnet is defined %} --subnet {{ network.subnet }} {%- endif %}
+        {%- for param,value in network.get('opt', {}).iteritems() %} --opt {{ param }}={{ value }} {%- endfor %}
+        {{ name }}
+    - unless: "docker network ls | grep {{ name }}"
+    - require_in:
+      {%- if swarm.role == 'master' %}
+      - cmd: docker_swarm_init
+      {%- else %}
+      - cmd: docker_swarm_join
+      {%- endif %}
+
+{%- endif %}
+{%- endfor %}
+
 {%- if swarm.role == 'master' %}
 
 docker_swarm_init:
