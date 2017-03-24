@@ -24,6 +24,7 @@ docker_service_{{ name }}_create:
         --with-registry-auth
         {%- for env, value in service.get('environment', {}).iteritems() %} -e {{ env }}="{{ value }}"{%- endfor %}
         {%- for port in service.get('ports', []) %} -p {{ port }}{%- endfor %}
+        {%- for name, host in service.get('hosts', {}).iteritems() %} --host {{ host.get('name', name) }}:{{ host.address }}{%- endfor %}
         {%- for label, value in service.get('label', {}).iteritems() %} -l {{ label }}="{{ value }}"{%- endfor %}
         {%- if service.network is defined %} --network {{ service.network }}{%- endif %}
         {%- if service.replicas is defined %} --replicas {{ service.replicas }}{%- endif %}
