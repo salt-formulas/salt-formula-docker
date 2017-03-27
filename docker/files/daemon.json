@@ -1,5 +1,9 @@
 {% from "docker/map.jinja" import host with context %}
 {
+  {%- if host.experimental is defined %}
+  "experimental": {{ host.experimental|lower }}
+  {%- if host.insecure_registries is defined %},{% endif %}
+  {%- endif %}
   {%- if host.insecure_registries is defined %}
   "insecure-registries": [
     {%- for registry in host.insecure_registries %}
