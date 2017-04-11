@@ -1,7 +1,7 @@
 
-======
-Docker
-======
+==============
+Docker Formula
+==============
 
 Docker is a platform for developers and sysadmins to develop, ship, and run applications. Docker lets you quickly assemble applications from components and eliminates the friction that can come when shipping code. Docker lets you get your code tested and deployed into production as fast as possible.
 
@@ -12,11 +12,11 @@ Docker is supported on the following systems:
 * Ubuntu Precise 12.04 (LTS) (64-bit)
 * Ubuntu Raring 13.04 and Saucy 13.10 (64 bit)
 
-Sample pillar
--------------
+Sample Pillars
+==============
 
-Host
-----
+Docker Host
+-----------
 
 .. code-block:: yaml
 
@@ -30,8 +30,9 @@ Host
           engine: json-file
           size: 50m
 
-Swarm
------
+
+Docker Swarm
+------------
 
 Role can be master, manager or worker. Where master is the first manager that
 will initialize the swarm.
@@ -50,7 +51,7 @@ Metadata for manager (first node):
           address: 192.168.1.5
           port: 2377
 
-Metadata for worker:
+Metadata for worker.
 
 .. code-block:: yaml
 
@@ -67,8 +68,8 @@ Token to join to master node is obtained from grains using salt.mine.  In case
 of any ``join_token undefined`` issues, ensure you have ``docker_swarm_``
 grains available.
 
-Client
-------
+Docker Client
+-------------
 
 Container
 ~~~~~~~~~
@@ -91,8 +92,8 @@ Container
             volumes:
               - /srv/volumes/jenkins:/var/jenkins_home
 
-Compose
-~~~~~~~
+Using Docker Compose
+~~~~~~~~~~~~~~~~~~~~
 
 There are three options how to install docker-compose:
 
@@ -131,9 +132,6 @@ Install docker-compose using Docker (default is distribution package)
                 depends_on:
                   - db
 
-Service
--------
-
 To deploy service in Swarm mode, you can use ``docker.client.service``:
 
 .. code-block:: yaml
@@ -159,8 +157,8 @@ To deploy service in Swarm mode, you can use ``docker.client.service``:
                   destination: /var/lib/postgresql/data
 
 
-Registry
---------
+Docker Registry
+---------------
 
 .. code-block:: yaml
 
@@ -194,7 +192,6 @@ Registry
                 - name@receivehost.com
 
 Docker login to private registry
---------------------------------
 
 .. code-block:: yaml
 
@@ -211,8 +208,9 @@ Docker login to private registry
             user: username2
             password: password2
 
-Read more
----------
+
+More Information
+================
 
 * https://docs.docker.com/installation/ubuntulinux/
 * https://github.com/saltstack-formulas/docker-formula
