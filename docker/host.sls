@@ -1,14 +1,19 @@
 {% from "docker/map.jinja" import host with context %}
+
 {%- if host.enabled %}
 
 docker_packages:
   pkg.installed:
   - pkgs: {{ host.pkgs }}
 
+{%- if grains.get('virtual_subtype', None) not in ['Docker', 'LXC'] %}
+
 network.ipv4.ip_forward:
   sysctl.present:
     - name: net.ipv4.ip_forward
     - value: 1
+
+{%- endif %}
 
 {%- if grains.os == 'Ubuntu' %}
 
@@ -18,8 +23,10 @@ network.ipv4.ip_forward:
   - template: jinja
   - require:
     - pkg: docker_packages
+  {%- if not grains.get('noservices', False)%}
   - watch_in:
     - service: docker_service
+  {%- endif %}
 
 {%- endif %}
 
@@ -27,10 +34,15 @@ network.ipv4.ip_forward:
   file.managed:
   - source: salt://docker/files/daemon.json
   - template: jinja
+  - makedirs: True
   - require:
     - pkg: docker_packages
+  {%- if not grains.get('noservices', False)%}
   - watch_in:
     - service: docker_service
+  {%- endif %}
+
+{%- if not grains.get('noservices', False)%}
 
 docker_service:
   service.running:
@@ -38,6 +50,9 @@ docker_service:
   - enable: true
   - require:
     - pkg: docker_packages
+
+{%- endif %}
+
 
 {%- if host.registry is defined %}
 

@@ -6,13 +6,13 @@ include:
 {%- for name, container in client.get('container', {}).iteritems() %}
   {%- set id = name %}
   {%- set required_containers = [] %}
-
+{%- if not grains.get('noservices', True)%}
 {{id}}_image:
   dockerng.image_present:
     - name: {{ container.image }}
     - require:
       - pkg: docker_python
-
+{%- endif %}
 {%- set binds = {} %}
 {%- set volumes = {} %}
 {%- for volume in container.get('volumes', []) %}
@@ -35,7 +35,7 @@ include:
 {%- endif %}
 
 {%- endfor %}
-
+{%- if not grains.get('noservices', True)%}
 {{id}}_container:
   dockerng.running:
     - name: {{id}}
@@ -94,4 +94,5 @@ include:
       - dockerng: {{containerid}}
     {%- endfor %}
   {%- endif %}
+{%- endif %}  
 {% endfor %}

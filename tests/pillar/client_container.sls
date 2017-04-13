@@ -14,3 +14,6 @@ docker:
           JAVA_OPTS: "-Dhudson.footerURL=https://www.example.com"
         volumes:
           - /srv/volumes/jenkins:/var/jenkins_home
+    compose:
+      source:
+        engine: pip
