@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   {%- for name, srv in service.iteritems() %}
   {%- set env_file_set = False %}
@@ -11,6 +11,16 @@ services:
     env_file: .env
     {%- endif %}
   {%- endfor %}
+
+{%- if network|default({}) %}
+networks:
+{%- for name, net in network.iteritems() %}
+  {{ name }}:
+    {%- for key, value in net.iteritems() %}
+    {{ key }}: {{ value }}
+    {%- endfor %}
+{%- endfor %}
+{%- endif %}
 
 {#-
   vim: syntax=jinja

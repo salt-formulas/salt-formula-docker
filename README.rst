@@ -95,6 +95,43 @@ Container
 Using Docker Compose
 ~~~~~~~~~~~~~~~~~~~~
 
+There are two states that provides this functionality:
+
+- docker.client.stack
+- docker.client.compose
+
+Stack is new and works with Docker Swarm Mode. Compose is legacy and works
+only if node isn't member of Swarm.
+Metadata for both states are similar and differs only in implementation.
+
+Stack
+^^^^^
+
+.. code-block:: yaml
+
+    docker:
+      client:
+        stack:
+          django_web:
+            enabled: true
+            update: true
+            environment:
+              SOMEVAR: somevalue
+            service:
+              db:
+                image: postgres
+              web:
+                image: djangoapp
+                volumes:
+                  - /srv/volumes/django:/srv/django
+                ports:
+                  - 8000:8000
+                depends_on:
+                  - db
+
+Compose
+^^^^^^^
+
 There are three options how to install docker-compose:
 
 - distribution package (default)
@@ -131,6 +168,9 @@ Install docker-compose using Docker (default is distribution package)
                   - 8000:8000
                 depends_on:
                   - db
+
+Service
+-------
 
 To deploy service in Swarm mode, you can use ``docker.client.service``:
 

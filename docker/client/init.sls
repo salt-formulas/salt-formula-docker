@@ -9,6 +9,9 @@ include:
   {%- if client.compose is defined %}
   - docker.client.compose
   {%- endif %}
+  {%- if client.stack is defined %}
+  - docker.client.stack
+  {%- endif %}
   {%- if client.service is defined %}
   - docker.client.service
   {%- endif %}

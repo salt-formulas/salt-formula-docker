@@ -1,5 +1,10 @@
 {% from "docker/map.jinja" import client with context %}
 
+{#-
+  This state is used for old-way docker-compose that doesn't work with Docker
+  Swarm mode. For Docker Swarm, use docker.client.stack
+#}
+
 include:
   - docker.client
   {%- if client.compose.source.engine == 'docker' %}
