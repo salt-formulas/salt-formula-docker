@@ -19,6 +19,8 @@ docker_service_{{ name }}_volume_{{ vname }}:
 docker_service_{{ name }}_create:
   cmd.run:
     - name: >
+        i=1;
+        while [ $i -lt 5 ]; do
         docker service create
         --name {{ name }}
         --with-registry-auth
@@ -41,13 +43,22 @@ docker_service_{{ name }}_create:
         {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
         {{ service.image }}
         {%- if service.command is defined %} {{ service.command }}{%- endif %}
-        {%- for arg in service.get('args', []) %} {{ arg }}{%- endfor %}
+        {%- for arg in service.get('args', []) %} {{ arg }}{%- endfor %};
+        ret=$?;
+        [ $ret -eq 0 ] && exit 0;
+        echo "Service creation failed, retrying in 3 seconds.." >&2;
+        sleep 3;
+        i=$[ $i + 1 ];
+        done
+    - shell: /bin/bash
     - unless: "docker service ls | grep {{ name }}"
 
 {%- if service.get('update_service', False) %}
 docker_service_{{ name }}_update:
   cmd.run:
     - name: >
+        i=1;
+        while [ $i -lt 5 ]; do
         docker service update
         --name {{ name }}
         --with-registry-auth
@@ -61,7 +72,14 @@ docker_service_{{ name }}_update:
         {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
         --image {{ service.image }}
-        {{ name }}
+        {{ name }};
+        ret=$?;
+        [ $ret -eq 0 ] && exit 0;
+        echo "Service update failed, retrying in 3 seconds.." >&2;
+        sleep 3;
+        i=$[ $i + 1 ];
+        done
+    - shell: /bin/bash
     - require:
       - cmd: docker_service_{{ name }}_create
 {%- endif %}
