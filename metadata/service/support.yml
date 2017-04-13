@@ -1,6 +1,8 @@
 parameters:
   docker:
     _support:
+      telegraf:
+        enabled: true
       collectd:
         enabled: false
       heka:
