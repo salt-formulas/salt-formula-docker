@@ -58,6 +58,7 @@ docker_{{ app }}_compose:
     - defaults:
         compose: {{ compose }}
         service: {{ compose.service }}
+        network: {{ compose.network|default({}) }}
     - require:
         - file: docker_{{ app }}_dir
 
