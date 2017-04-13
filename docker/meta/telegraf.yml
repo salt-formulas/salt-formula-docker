@@ -1,0 +1,7 @@
+agent:
+  input:
+    docker:
+      endpoint: unix:///var/run/docker.sock
+      timeout: 5
+      perdevice: true
+      total: false
