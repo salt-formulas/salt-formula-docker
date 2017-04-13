@@ -45,6 +45,24 @@ docker_{{ app }}_env:
 
     {%- endif %}
 
+    {%- for name, service in compose.service.iteritems() %}
+      {%- for volume in service.get('volumes', []) %}
+        {%- if volume is string and ':' in volume %}
+          {%- set path = volume.split(':')[0] %}
+        {%- elif volume is mapping and volume.get('type', 'bind') == 'bind' %}
+          {%- set path = volume.source %}
+        {%- endif %}
+
+        {%- if path is defined %}
+docker_{{ app }}_volume_{{ path }}:
+  file.directory:
+    - name: {{ path }}
+    - makedirs: true
+    - unless: "test -e {{ path }}"
+        {%- endif %}
+      {%- endfor %}
+    {%- endfor %}
+
     {%- if compose.enabled|default(True) %}
 
 docker_stack_{{ app }}:
