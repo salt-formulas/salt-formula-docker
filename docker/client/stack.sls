@@ -54,7 +54,7 @@ docker_{{ app }}_env:
         {%- endif %}
 
         {%- if path is defined %}
-docker_{{ app }}_volume_{{ path }}:
+docker_{{ app }}_{{ name }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
     - makedirs: true
