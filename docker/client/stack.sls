@@ -67,7 +67,17 @@ docker_{{ app }}_{{ name }}_volume_{{ path }}:
 
 docker_stack_{{ app }}:
   cmd.run:
-    - name: docker stack deploy --compose-file docker-compose.yml {{ app }}
+    - name: >
+        i=1;
+        while [ $i -lt 5 ]; do
+        docker stack deploy --compose-file docker-compose.yml {{ app }};
+        ret=$?;
+        [ $ret -eq 0 ] && exit 0;
+        echo "Stack creation failed, retrying in 3 seconds.." >&2;
+        sleep 3;
+        i=$[ $i + 1 ];
+        done
+    - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
     - unless: "docker stack ls | grep '{{ app }}'"
@@ -77,7 +87,17 @@ docker_stack_{{ app }}:
 
 docker_stack_{{ app }}_update:
   cmd.wait:
-    - name: docker stack deploy --compose-file docker-compose.yml {{ app }}
+    - name: >
+        i=1;
+        while [ $i -lt 5 ]; do
+        docker stack deploy --compose-file docker-compose.yml {{ app }};
+        ret=$?;
+        [ $ret -eq 0 ] && exit 0;
+        echo "Stack update failed, retrying in 3 seconds.." >&2;
+        sleep 3;
+        i=$[ $i + 1 ];
+        done
+    - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
     - require:
