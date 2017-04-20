@@ -113,7 +113,7 @@ docker_{{ app }}_pull:
 docker_{{ app }}_{{ compose.status }}:
   cmd.run:
     - name: '{% if client.compose.source.engine == 'pip' %}/usr/local/bin/{%
-    endif %}docker-compose {{ compose.status }} -d'
+    endif %}docker-compose --verbose {{ compose.status }} -d'
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
     - require:
