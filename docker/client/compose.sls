@@ -19,6 +19,7 @@ docker_compose:
 docker_compose_python_pip:
   pkg.installed:
     - name: python-pip
+    - reload_modules: true
 
 docker_compose:
   pip.installed:
@@ -103,12 +104,15 @@ docker_{{ app }}_pull:
     - watch:
       - file: docker_{{ app }}_env
       - file: docker_{{ app }}_compose
+    {%- if not grains.get('noservices', False)%}
     {%- if compose.status is defined %}
     - watch_in:
       - cmd: docker_{{ app }}_{{ compose.status }}
     {%- endif %}
+    {%- endif %}
 {%- endif %}
 
+{%- if not grains.get('noservices', False)%}
 {%- if compose.status is defined %}
 docker_{{ app }}_{{ compose.status }}:
   cmd.run:
@@ -128,6 +132,6 @@ docker_{{ app }}_{{ compose.status }}:
       - file: docker_{{ app }}_env
       - file: docker_{{ app }}_compose
 {%- endif %}
-
+{%- endif %}
 {%- endif %}
 {%- endfor %}
