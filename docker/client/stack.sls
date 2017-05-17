@@ -76,6 +76,7 @@ docker_stack_{{ app }}:
         echo "Stack creation failed, retrying in 3 seconds.." >&2;
         sleep 3;
         i=$[ $i + 1 ];
+        exit 1;
         done
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
@@ -96,6 +97,7 @@ docker_stack_{{ app }}_update:
         echo "Stack update failed, retrying in 3 seconds.." >&2;
         sleep 3;
         i=$[ $i + 1 ];
+        exit 1;
         done
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
