@@ -104,15 +104,12 @@ docker_{{ app }}_pull:
     - watch:
       - file: docker_{{ app }}_env
       - file: docker_{{ app }}_compose
-    {%- if not grains.get('noservices', False)%}
     {%- if compose.status is defined %}
     - watch_in:
       - cmd: docker_{{ app }}_{{ compose.status }}
     {%- endif %}
-    {%- endif %}
 {%- endif %}
 
-{%- if not grains.get('noservices', False)%}
 {%- if compose.status is defined %}
 docker_{{ app }}_{{ compose.status }}:
   cmd.run:
@@ -120,6 +117,9 @@ docker_{{ app }}_{{ compose.status }}:
     endif %}docker-compose {{ compose.status }} -d'
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
+    {% if grains.noservices is defined %}
+    - onlyif: {% if grains.get('noservices', "True") %}"True"{% else %}False{% endif %}
+    {% endif %}
     - require:
         {%- if client.compose.source.engine == 'pkg' %}
         - pkg: docker_compose
@@ -131,7 +131,6 @@ docker_{{ app }}_{{ compose.status }}:
     - watch:
       - file: docker_{{ app }}_env
       - file: docker_{{ app }}_compose
-{%- endif %}
 {%- endif %}
 {%- endif %}
 {%- endfor %}

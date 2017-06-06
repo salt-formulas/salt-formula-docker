@@ -23,10 +23,8 @@ network.ipv4.ip_forward:
   - template: jinja
   - require:
     - pkg: docker_packages
-  {%- if not grains.get('noservices', False)%}
   - watch_in:
     - service: docker_service
-  {%- endif %}
 
 {%- endif %}
 
@@ -37,22 +35,18 @@ network.ipv4.ip_forward:
   - makedirs: True
   - require:
     - pkg: docker_packages
-  {%- if not grains.get('noservices', False)%}
   - watch_in:
     - service: docker_service
-  {%- endif %}
-
-{%- if not grains.get('noservices', False)%}
 
 docker_service:
   service.running:
   - name: {{ host.service }}
   - enable: true
+  {% if grains.noservices is defined %}
+  - onlyif: {% if grains.get('noservices', "True") %}"True"{% else %}False{% endif %}
+  {% endif %}
   - require:
     - pkg: docker_packages
-
-{%- endif %}
-
 
 {%- if host.registry is defined %}
 
