@@ -117,9 +117,9 @@ docker_{{ app }}_{{ compose.status }}:
     endif %}docker-compose {{ compose.status }} -d'
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
-    {% if grains.noservices is defined %}
-    - onlyif: {% if grains.get('noservices', "True") %}"True"{% else %}False{% endif %}
-    {% endif %}
+    {%- if grains.get('noservices') %}
+    - onlyif: /bin/false
+    {%- endif %}
     - require:
         {%- if client.compose.source.engine == 'pkg' %}
         - pkg: docker_compose
