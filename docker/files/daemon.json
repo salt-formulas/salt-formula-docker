@@ -1,5 +1,9 @@
 {% from "docker/map.jinja" import host with context %}
 {
+  {%- if host.bip is defined %}
+  "bip": "{{ host.bip }}"
+  {%- if host.experimental is defined %},{% endif %}
+  {%- endif %}
   {%- if host.experimental is defined %}
   "experimental": {{ host.experimental|lower }}
   {%- if host.insecure_registries is defined %},{% endif %}
