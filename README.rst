@@ -23,12 +23,14 @@ Docker Host
     docker:
       host:
         enabled: true
-        experimental: true
-        insecure_registries:
-          - 127.0.0.1
-        log:
-          engine: json-file
-          size: 50m
+        options:
+          bip: 172.31.255.1/16
+          insecure_registries:
+            - 127.0.0.1
+            - 10.0.0.1
+          log-driver: json-file
+          log-opts:
+            max-size: 50m
 
 
 Docker Swarm

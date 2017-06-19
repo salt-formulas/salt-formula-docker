@@ -6,6 +6,7 @@ parameters:
   docker:
     host:
       enabled: true
-      log:
-        engine: json-file
-        size: 50m
+      options:
+        log-driver: json-file
+        log-opts:
+          max-size: 50m
