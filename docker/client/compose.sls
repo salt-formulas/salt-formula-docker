@@ -47,6 +47,9 @@ docker_compose:
 {%- if compose.service is defined %}
   {%- do compose.update({'services': compose.service}) %}
 {%- endif %}
+{%- if compose.network is defined %}
+  {%- do compose.update({'networks': compose.network}) %}
+{%- endif %}
 {%- if compose.services is defined %}
 
 docker_{{ app }}_dir:
