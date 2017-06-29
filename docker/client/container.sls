@@ -1,4 +1,5 @@
 {% from "docker/map.jinja" import client with context %}
+{% from "docker/map.jinja" import blacklist with context %}
 
 include:
   - docker.client
@@ -30,7 +31,7 @@ include:
 {%- do volumes.update({volume:volume}) %}
 {%- endif %}
 
-{%- if path.startswith('/') %}
+{%- if path.startswith('/') and container.makedirs|default(True) %}
 {{ id }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
@@ -100,5 +101,10 @@ include:
       - dockerng: {{containerid}}
     {%- endfor %}
   {%- endif %}
+  {%- for key, value in container.iteritems() %}
+    {%- if key not in blacklist.dockerng_running %}
+    - {{ key }}: {{ value }}
+    {%- endif %}
+  {%- endfor %}
 
 {% endfor %}

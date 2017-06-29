@@ -22,7 +22,8 @@
     'default': {
         'master': {
             'port': 2377
-        }
+        },
+        'grain_function': 'grains.items'
     }
 }, grain='os', merge=salt['pillar.get']('docker:swarm')) %}
 
@@ -56,3 +57,21 @@
         },
     },
 }, grain='os', merge=salt['pillar.get']('docker:registry')) %}
+
+{%- load_yaml as blacklist %}
+dockerng_running:
+  - name
+  - start
+  - user
+  - image
+  - onlyif
+  - makedirs
+  - command
+  - environment
+  - ports
+  - volumes
+  - binds
+  - volumes_from
+  - links
+  - restart
+{%- endload %}

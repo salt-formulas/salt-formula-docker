@@ -1,24 +1,38 @@
 version: '3'
+
 services:
-  {%- for name, srv in service.iteritems() %}
+  {%- for name, srv in services.iteritems() %}
   {%- set env_file_set = False %}
   {{ name }}:
-    {%- for key, value in srv.iteritems() %}
-    {%- if key == 'env_file' %}{%- set env_file_set = True %}{%- endif %}
-    {{ key }}: {{ value }}
-    {%- endfor %}
+    {%- if 'env_file' in srv.keys() %}{%- set env_file_set = True %}{%- endif %}
+    {{ srv|yaml(False)|indent(4) }}
     {%- if not env_file_set and compose.environment is defined %}
     env_file: .env
     {%- endif %}
   {%- endfor %}
 
-{%- if network|default({}) %}
+{%- if volumes|default({}) %}
+volumes:
+{%- for key, value in volumes.iteritems() %}
+  {%- if value is mapping %}
+  {{ key }}:
+    {{ value|yaml(False)|indent(4) }}
+  {%- else %}
+  {{ key }}:
+  {%- endif %}
+{%- endfor %}
+{%- endif %}
+
+
+{%- if networks|default({}) %}
 networks:
-{%- for name, net in network.iteritems() %}
-  {{ name }}:
-    {%- for key, value in net.iteritems() %}
-    {{ key }}: {{ value }}
-    {%- endfor %}
+{%- for key, value in networks.iteritems() %}
+  {%- if value is mapping %}
+  {{ key }}:
+    {{ value|yaml(False)|indent(4) }}
+  {%- else %}
+  {{ key }}:
+  {%- endif %}
 {%- endfor %}
 {%- endif %}
 
