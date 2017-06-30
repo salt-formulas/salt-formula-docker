@@ -45,12 +45,6 @@ docker_compose:
 
 {%- for app, compose in client.compose.iteritems() %}
 {%- if compose.service is defined %}
-  {%- do compose.update({'services': compose.service}) %}
-{%- endif %}
-{%- if compose.network is defined %}
-  {%- do compose.update({'networks': compose.network}) %}
-{%- endif %}
-{%- if compose.services is defined %}
 
 docker_{{ app }}_dir:
   file.directory:
@@ -64,9 +58,9 @@ docker_{{ app }}_compose:
     - template: jinja
     - defaults:
         compose: {{ compose }}
-        volumes: {{ compose.volumes|default({}) }}
-        services: {{ compose.services }}
-        networks: {{ compose.networks|default({}) }}
+        volume: {{ compose.volume|default({}) }}
+        service: {{ compose.service }}
+        network: {{ compose.network|default({}) }}
     - require:
         - file: docker_{{ app }}_dir
 

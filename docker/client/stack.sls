@@ -5,12 +5,6 @@ include:
 
 {%- for app, compose in client.stack.iteritems() %}
   {%- if compose.service is defined %}
-    {%- do compose.update({'services': compose.service}) %}
-  {%- endif %}
-  {%- if compose.network is defined %}
-    {%- do compose.update({'networks': compose.network}) %}
-  {%- endif %}
-  {%- if compose.services is defined %}
 
 docker_{{ app }}_dir:
   file.directory:
@@ -24,9 +18,9 @@ docker_{{ app }}_compose:
     - template: jinja
     - defaults:
         compose: {{ compose }}
-        volumes: {{ compose.volumes|default({}) }}
-        services: {{ compose.services }}
-        networks: {{ compose.networks|default({}) }}
+        volume: {{ compose.volume|default({}) }}
+        service: {{ compose.service }}
+        network: {{ compose.network|default({}) }}
     - require:
         - file: docker_{{ app }}_dir
 
@@ -52,7 +46,7 @@ docker_{{ app }}_env:
 
     {%- endif %}
 
-    {%- for name, service in compose.services.iteritems() %}
+    {%- for name, service in compose.service.iteritems() %}
       {%- for volume in service.get('volumes', []) %}
         {%- if volume is string and ':' in volume %}
           {%- set path = volume.split(':')[0] %}
