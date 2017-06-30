@@ -1,0 +1,13 @@
+server:
+  alert:
+    ProcstatRunningDockerd:
+      if: >-
+        procstat_running{process_name="dockerd"} == 0
+      {% raw %}
+      labels:
+        severity: warning
+        service: docker
+      annotations:
+        summary: 'Dockerd service is down'
+        description: 'Dockerd service is down on node {{ $labels.host }}'
+      {% endraw %}

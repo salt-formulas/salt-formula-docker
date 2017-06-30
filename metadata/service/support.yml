@@ -13,3 +13,5 @@ parameters:
         enabled: false
       sphinx:
         enabled: true
+      prometheus:
+        enabled: true
