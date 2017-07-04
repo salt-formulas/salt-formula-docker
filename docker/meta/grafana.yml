@@ -8,6 +8,7 @@ dashboard:
     format: json
     template: docker/files/grafana_dashboards/docker_influxdb.json
   main:
+    datasource: influxdb
     row:
       docker-data-plane:
         title: Docker
