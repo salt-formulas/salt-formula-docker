@@ -1,5 +1,10 @@
 dashboard:
-  docker:
+  docker_prometheus:
+    datasource: prometheus
+    format: json
+    template: docker/files/grafana_dashboards/docker_prometheus.json
+  docker_influxdb:
+    datasource: influxdb
     format: json
     template: docker/files/grafana_dashboards/docker_influxdb.json
   main:
