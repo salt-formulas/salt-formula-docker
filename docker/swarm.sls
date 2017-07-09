@@ -52,7 +52,7 @@ docker_swarm_grains_publish:
 
 {%- else %}
 
-{%- for node_name, node_grains in salt['mine.get']('*', swarm.grain_function).iteritems() %}
+{%- for node_name, node_grains in salt['mine.get']('*', swarm.mine_function).iteritems() %}
 {%- if node_grains.get("docker_swarm_AdvertiseAddr", None) == swarm.master.host|string+":"+swarm.master.port|string %}
 {%- set join_token = node_grains.get('docker_swarm_tokens').get(swarm.role, "unknown") %}
 
