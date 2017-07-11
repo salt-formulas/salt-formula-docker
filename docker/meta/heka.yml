@@ -1,6 +1,6 @@
 {% from "docker/map.jinja" import host with context %}
 
-{%- if host.enabled %}
+{%- if host.get('enabled') %}
 metric_collector:
   trigger:
     docker-local-check:
