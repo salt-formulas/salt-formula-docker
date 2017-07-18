@@ -1,6 +1,6 @@
 {% from "docker/map.jinja" import host with context %}
 
-{%- if host.enabled %}
+{%- if host.get('enabled') %}
 local_plugin:
   collectd_docker:
     plugin: python
