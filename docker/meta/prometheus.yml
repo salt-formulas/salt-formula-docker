@@ -3,7 +3,7 @@
 server:
   alert:
 {%- if host.get('enabled') %}
-    ProcstatRunningDockerd:
+    DockerdProcessDown:
       if: >-
         procstat_running{process_name="dockerd"} == 0
   {%- raw %}
