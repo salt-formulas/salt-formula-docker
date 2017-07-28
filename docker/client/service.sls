@@ -24,6 +24,7 @@ docker_service_{{ name }}_create:
         docker service create
         --name {{ name }}
         --with-registry-auth
+        --detach=true
         {%- for env, value in service.get('environment', {}).iteritems() %} -e {{ env }}="{{ value }}"{%- endfor %}
         {%- for port in service.get('ports', []) %} -p {{ port }}{%- endfor %}
         {%- for name, host in service.get('hosts', {}).iteritems() %} --host {{ host.get('name', name) }}:{{ host.address }}{%- endfor %}
@@ -60,8 +61,8 @@ docker_service_{{ name }}_update:
         i=1;
         while [ $i -lt 5 ]; do
         docker service update
-        --name {{ name }}
         --with-registry-auth
+        --detach=true
         {%- if service.replicas is defined %} --replicas {{ service.replicas }}{%- endif %}
         {%- if service.user is defined %} --user {{ service.user }}{%- endif %}
         {%- if service.workdir is defined %} --workdir {{ service.workdir }}{%- endif %}
