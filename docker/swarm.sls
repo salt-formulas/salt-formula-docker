@@ -62,7 +62,7 @@ docker_swarm_grains_publish:
 
 {%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token[-1]) %}
 
-{%- if join_token && join_token != "unknown" %}
+{%- if join_token and join_token != "unknown" %}
 
 docker_swarm_join:
   cmd.run:
