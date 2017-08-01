@@ -52,17 +52,17 @@ docker_swarm_grains_publish:
 
 {%- else %}
 
-{%- set join_token = None %}
-
+{%- set join_token = [] %}
+# Globals can't be overrided from for cycle
 {%- for node_name, node_grains in salt['mine.get']('*', swarm.mine_function).iteritems() %}
 {%- if node_grains.get("docker_swarm_AdvertiseAddr", None) == swarm.master.host|string+":"+swarm.master.port|string %}
-{%- set join_token = node_grains.get('docker_swarm_tokens').get(swarm.role, "unknown") %}
+{%- do join_token.append(node_grains.get('docker_swarm_tokens').get(swarm.role, "unknown")) %}
 {%- endif %}
 {%- endfor %}
 
-{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token) %}
+{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token[-1]) %}
 
-{%- if join_token %}
+{%- if join_token && join_token != "unknown" %}
 
 docker_swarm_join:
   cmd.run:
