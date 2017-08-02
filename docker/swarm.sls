@@ -57,10 +57,11 @@ docker_swarm_grains_publish:
 {%- for node_name, node_grains in salt['mine.get']('*', swarm.mine_function).iteritems() %}
 {%- if node_grains.get("docker_swarm_AdvertiseAddr", None) == swarm.master.host|string+":"+swarm.master.port|string %}
 {%- do join_token.append(node_grains.get('docker_swarm_tokens').get(swarm.role, "unknown")) %}
+{%- break %}
 {%- endif %}
 {%- endfor %}
 
-{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token[-1]) %}
+{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token.0) %}
 
 {%- if join_token and join_token != "unknown" %}
 
