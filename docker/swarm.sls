@@ -61,9 +61,7 @@ docker_swarm_grains_publish:
 {%- endif %}
 {%- endfor %}
 
-{%- if join_token %}
-
-{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token[-1]) %}
+{%- set join_token = swarm.get('join_token', {}).get(swarm.role, join_token[-1] if join_token else 'unknown') %}
 
 docker_swarm_join:
   cmd.run:
@@ -76,8 +74,6 @@ docker_swarm_join:
     - unless: "test -e /var/lib/docker/swarm/state.json"
     - require:
       - service: docker_service
-
-{%- endif %}
 
 {%- endif %}
 
