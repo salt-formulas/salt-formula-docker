@@ -1,4 +1,5 @@
 {% from "docker/map.jinja" import swarm with context %}
+{% from "linux/map.jinja" import network with context %}
 {%- if swarm.enabled|default(True) %}
 
 include:
@@ -40,7 +41,9 @@ docker_swarm_init:
         docker swarm init
         {%- if swarm.advertise_addr is defined %} --advertise-addr {{ swarm.advertise_addr }}{%- endif %}
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
-    - unless: "test -e /var/lib/docker/swarm/state.json"
+    - unless:
+      - "test -e /var/lib/docker/swarm/state.json"
+      - "docker node ls | egrep -q '{{ network.hostname }} *Ready *Active *Leader'"
     - require:
       - service: docker_service
 
@@ -71,7 +74,9 @@ docker_swarm_join:
         {%- if swarm.advertise_addr is defined %} --advertise-addr {{ swarm.advertise_addr }}{%- endif %}
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
         {{ swarm.master.host }}:{{ swarm.master.port }}
-    - unless: "test -e /var/lib/docker/swarm/state.json"
+    - unless:
+      - "test -e /var/lib/docker/swarm/state.json"
+      - "grep -q node_id /var/lib/docker/swarm/state.json"
     - require:
       - service: docker_service
 
