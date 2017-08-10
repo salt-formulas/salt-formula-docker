@@ -6,6 +6,7 @@ docker:
         enabled: true
         environment:
           SOMEVAR: somevalue
+        version: 3.3
         service:
           db:
             image: postgres
