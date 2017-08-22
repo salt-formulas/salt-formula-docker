@@ -7,7 +7,7 @@ doc:
       name: host
       param:
         version:
-          value: "{{ salt['cmd.run']('docker --version') }}"
+          value: "{{ salt['cmd.shell']('docker --version') }}"
     {%- endif %}
     {%- if pillar.docker.swarm is defined %}
     {%- from "docker/map.jinja" import swarm with context %}
