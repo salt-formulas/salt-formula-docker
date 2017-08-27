@@ -33,6 +33,22 @@ Docker Host
             max-size: 50m
 
 
+Configure proxy for docker host
+
+.. code-block:: yaml
+
+    docker:
+      host:
+        proxy:
+          enabled: true
+          http: http://user:pass@proxy:3128
+          https: http://user:pass@proxy:3128
+          no_proxy:
+            - localhost
+            - 127.0.0.1
+            - docker-registry
+
+
 Docker Swarm
 ------------
 
