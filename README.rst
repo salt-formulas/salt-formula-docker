@@ -135,6 +135,7 @@ Stack
             update: true
             environment:
               SOMEVAR: somevalue
+            version: "3.1"
             service:
               db:
                 image: postgres
