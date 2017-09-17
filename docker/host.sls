@@ -38,6 +38,33 @@ network.ipv4.ip_forward:
   - watch_in:
     - service: docker_service
 
+{%- if host.get('proxy', {}).get('enabled') %}
+{%- if host.proxy.get('http') or host.proxy.get('https') or host.proxy.get('no_proxy') %}
+
+/etc/systemd/system/docker.service.d/http-proxy.conf:
+  file.managed:
+  - source: salt://docker/files/http-proxy.conf
+  - template: jinja
+  - makedirs: True
+  - require_in:
+    - service: docker_service
+
+{% else %}
+
+/etc/systemd/system/docker.service.d/http-proxy.conf:
+  file.absent
+
+{%- endif %}
+
+systemd_reload_due_proxy:
+  module.run:
+    - name: service.systemctl_reload
+    - onchanges:
+      - file: /etc/systemd/system/docker.service.d/http-proxy.conf
+
+{%- endif %}
+
+
 docker_service:
   service.running:
   - name: {{ host.service }}

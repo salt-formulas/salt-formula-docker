@@ -1,0 +1,48 @@
+{% from "docker/map.jinja" import host, client with context %}
+
+server:
+  alert:
+{%- if host.get('enabled') %}
+    DockerdProcessDown:
+      if: >-
+        procstat_running{process_name="dockerd"} == 0
+  {%- raw %}
+      labels:
+        severity: warning
+        service: docker
+      annotations:
+        summary: 'Dockerd service is down'
+        description: 'Dockerd service is down on node {{ $labels.host }}'
+  {%- endraw %}
+{%- endif %}
+{%- if client.get('enabled') %}
+  {%- for stack_name, stack in client.get('stack', {})|dictsort %}
+    {%- for service_name, service in stack.get('service', {})|dictsort %}
+      {%- if service.get('deploy', {}).replicas is defined %}
+        {%- set full_service_name = "{}_{}".format(stack_name, service_name) %}
+        {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
+        {%- set label_selector = 'com_docker_swarm_service_name="{}_{}"'.format(stack_name, service_name) %}
+        {%- if service.deploy.replicas > 1 %}
+    DockerService{{ camel_case_name }}InvalidReplicasNumber:
+      if: >-
+        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) != {{ service.deploy.replicas }}
+      labels:
+        severity: warning
+        service: docker
+      annotations:
+        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas'
+        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+        {%- endif %}
+    DockerService{{ camel_case_name }}NoReplica:
+      if: >-
+        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) == 0 or absent(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}) == 1
+      labels:
+        severity: critical
+        service: docker
+      annotations:
+        summary: 'Docker Swarm service {{ full_service_name }} down'
+        description: "No replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+      {%- endif %}
+    {%- endfor %}
+  {%- endfor %}
+{%- endif %}

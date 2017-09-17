@@ -1,4 +1,5 @@
 {% from "docker/map.jinja" import client with context %}
+{% from "docker/map.jinja" import blacklist with context %}
 
 include:
   - docker.client
@@ -8,8 +9,16 @@ include:
   {%- set required_containers = [] %}
 
 {{id}}_image:
+  {%- if grains['saltversioninfo'][0] >= 2017 %}
+  docker_image.present:
+  {%- else %}
   dockerng.image_present:
+  {%- endif %}
     - name: {{ container.image }}
+    {%- if container.build is defined %}
+    - build: {{ container.build }}
+    {%- endif %}
+    - force: {{ container.force|default(False) }}
     {%- if grains.get('noservices') %}
     - onlyif: /bin/false
     {%- endif %}
@@ -30,7 +39,7 @@ include:
 {%- do volumes.update({volume:volume}) %}
 {%- endif %}
 
-{%- if path.startswith('/') %}
+{%- if path.startswith('/') and container.makedirs|default(True) %}
 {{ id }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
@@ -40,7 +49,11 @@ include:
 {%- endfor %}
 
 {{id}}_container:
+  {%- if grains['saltversioninfo'][0] >= 2017 %}
+  docker_container.running:
+  {%- else %}
   dockerng.running:
+  {%- endif %}
     - name: {{id}}
     - start: {{ container.start|default(True) }}
     - user: {{ container.user|default("root") }}
@@ -93,12 +106,25 @@ include:
   {%- if 'restart' in container %}
     - restart_policy: {{ container.restart }}
   {%- endif %}
-    - require:
+    - watch:
+  {%- if grains['saltversioninfo'][0] >= 2017 %}
+      - docker_image: {{id}}_image
+  {%- else %}
       - dockerng: {{id}}_image
+  {%- endif %}    
   {%- if required_containers is defined %}
     {%- for containerid in required_containers %}
+      {%- if grains['saltversioninfo'][0] >= 2017 %}
+      - docker_container: {{containerid}}
+      {%- else %}
       - dockerng: {{containerid}}
+      {%- endif %}
     {%- endfor %}
   {%- endif %}
+  {%- for key, value in container.iteritems() %}
+    {%- if key not in blacklist.dockerng_running %}
+    - {{ key }}: {{ value }}
+    {%- endif %}
+  {%- endfor %}
 
 {% endfor %}

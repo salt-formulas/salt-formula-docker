@@ -1,5 +1,9 @@
 agent:
   input:
+    procstat:
+      process:
+        dockerd:
+          exe: dockerd
     docker:
       endpoint: unix:///var/run/docker.sock
       timeout: 5

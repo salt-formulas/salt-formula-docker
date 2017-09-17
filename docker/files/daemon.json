@@ -1,21 +1,42 @@
-{% from "docker/map.jinja" import host with context %}
+{%- from "docker/map.jinja" import host with context -%}
+
+{#- legacy and backward compatibility -#}
+
+{%- if 'experimental' not in host.get('options') and host.experimental is defined %}
+  {% do host.update({"experimental": host.experimental}) %}
+{%- endif -%}
+
+{%- if 'insecure-registries' not in host.get('options') and host.insecure_registries is defined %}
+  {% do host.options.update({"insecure-registries": []}) %}
+  {%- for srv in host.get('insecure_registries') %}
+    {% do host.options['insecure-registries'].append(srv) %}
+  {%- endfor %}
+{%- endif -%}
+
 {
-  {%- if host.bip is defined %}
-  "bip": "{{ host.bip }}"
-  {%- if host.experimental is defined %},{% endif %}
-  {%- endif %}
-  {%- if host.experimental is defined %}
-  "experimental": {{ host.experimental|lower }}
-  {%- if host.insecure_registries is defined %},{% endif %}
-  {%- endif %}
-  {%- if host.insecure_registries is defined %}
-  "insecure-registries": [
-    {%- for registry in host.insecure_registries %}
-    "{{ registry }}"{% if not loop.last %},{% endif %}
+{%- for k, v in host.get('options', {}).iteritems() -%}
+
+  {%- if v is string %}
+    "{{ k }}": "{{ v }}"{%- if not loop.last %},{% endif %}
+
+  {%- elif v is mapping %}
+    "{{ k }}": {
+      {%- for ki, kv in v.iteritems() %}
+      "{{ ki }}": "{{ kv }}"{%- if not loop.last %},{% endif %}
+      {%- endfor %}
+    }{%- if not loop.last %},{% endif %}
+
+  {%- elif v is iterable %}
+    "{{ k }}": [
+    {%- for i in v %}
+      "{{ i }}"{% if not loop.last %},{% endif %}
     {%- endfor %}
-  ]
-  {%- endif %}
+    ]{%- if not loop.last %},{% endif %}
+
+  {%- elif v in [True, False] %}
+    "{{ k }}": {{ v|lower }}{%- if not loop.last %},{% endif %}
+
+  {%- endif -%}
+
+{%- endfor %}
 }
-{#-
-  vim: syntax=jinja
--#}

@@ -24,6 +24,7 @@ docker_service_{{ name }}_create:
         docker service create
         --name {{ name }}
         --with-registry-auth
+        --detach=true
         {%- for env, value in service.get('environment', {}).iteritems() %} -e {{ env }}="{{ value }}"{%- endfor %}
         {%- for port in service.get('ports', []) %} -p {{ port }}{%- endfor %}
         {%- for name, host in service.get('hosts', {}).iteritems() %} --host {{ host.get('name', name) }}:{{ host.address }}{%- endfor %}
@@ -35,6 +36,7 @@ docker_service_{{ name }}_create:
         {%- if service.mode is defined %} --mode {{ service.mode }}{%- endif %}
         {%- if service.endpoint is defined %} --endpoint-mode {{ service.endpoint }}{%- endif %}
         {%- if service.constraint is defined %} --constraint {{ service.constraint }}{%- endif %}
+        {%- if service.hostname is defined %} --hostname {{ service.hostname }}{%- endif %}
         {%- for name, volume in service.get('volume', {}).iteritems() %} --mount {% for key, value in volume.iteritems() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}{%- endfor %}
         {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
@@ -60,8 +62,8 @@ docker_service_{{ name }}_update:
         i=1;
         while [ $i -lt 5 ]; do
         docker service update
-        --name {{ name }}
         --with-registry-auth
+        --detach=true
         {%- if service.replicas is defined %} --replicas {{ service.replicas }}{%- endif %}
         {%- if service.user is defined %} --user {{ service.user }}{%- endif %}
         {%- if service.workdir is defined %} --workdir {{ service.workdir }}{%- endif %}

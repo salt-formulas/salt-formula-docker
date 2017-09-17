@@ -10,3 +10,9 @@ docker:
       - srv01
       - srv02
       - srv03
+    proxy:
+      http: http://proxy:3128
+      https: http://[::1]:3128
+      no_proxy:
+        - local1
+        - local2

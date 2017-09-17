@@ -58,6 +58,7 @@ docker_{{ app }}_compose:
     - template: jinja
     - defaults:
         compose: {{ compose }}
+        volume: {{ compose.volume|default({}) }}
         service: {{ compose.service }}
         network: {{ compose.network|default({}) }}
     - require:
