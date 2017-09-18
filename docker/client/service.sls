@@ -36,6 +36,7 @@ docker_service_{{ name }}_create:
         {%- if service.mode is defined %} --mode {{ service.mode }}{%- endif %}
         {%- if service.endpoint is defined %} --endpoint-mode {{ service.endpoint }}{%- endif %}
         {%- if service.constraint is defined %} --constraint {{ service.constraint }}{%- endif %}
+        {%- if service.hostname is defined %} --hostname {{ service.hostname }}{%- endif %}
         {%- for name, volume in service.get('volume', {}).iteritems() %} --mount {% for key, value in volume.iteritems() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}{%- endfor %}
         {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
