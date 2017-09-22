@@ -18,7 +18,7 @@ Docker Host
         enabled: true
         options:
           bip: 172.31.255.1/16
-          insecure_registries:
+          insecure-registries:
             - 127.0.0.1
             - 10.0.0.1
           log-driver: json-file
