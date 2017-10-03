@@ -181,6 +181,24 @@ Install docker-compose using Docker (default is distribution package)
                 depends_on:
                   - db
 
+Registry
+^^^^^^^^
+
+.. code-block:: yaml
+
+    docker:
+      client:
+        registry:
+          target_registry: apt:5000
+          image:
+            - registry: docker
+              name: compose:1.8.0
+            - registry: tcpcloud
+              name: jenkins:latest
+            - registry: ""
+              name: registry:2
+              target_registry: myregistry
+
 Service
 -------
 
