@@ -58,6 +58,13 @@
     },
 }, grain='os', merge=salt['pillar.get']('docker:registry')) %}
 
+{% set monitoring = salt['grains.filter_by']({
+    'default': {
+        'replicas_failed_warning_threshold_percent': 0.3,
+        'replicas_failed_critical_threshold_percent': 0.6,
+    },
+}, grain='os_family', merge=salt['pillar.get']('docker:monitoring')) %}
+
 {%- load_yaml as blacklist %}
 dockerng_running:
   - name

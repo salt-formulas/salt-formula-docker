@@ -1,4 +1,4 @@
-{% from "docker/map.jinja" import host, client with context %}
+{% from "docker/map.jinja" import host, client, monitoring with context %}
 
 server:
   alert:
@@ -23,22 +23,31 @@ server:
         {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
         {%- set label_selector = 'com_docker_swarm_service_name="{}_{}"'.format(stack_name, service_name) %}
         {%- if service.deploy.replicas > 1 %}
-    DockerService{{ camel_case_name }}InvalidReplicasNumber:
+    DockerService{{ camel_case_name }}WarningReplicasNumber:
       if: >-
-        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) != {{ service.deploy.replicas }}
+        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_warning_threshold_percent }}
       labels:
         severity: warning
-        service: docker
+        service: "{{ full_service_name }}"
+      annotations:
+        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas'
+        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+    DockerService{{ camel_case_name }}CriticalReplicasNumber:
+      if: >-
+        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_critical_threshold_percent }}
+      labels:
+        severity: critical
+        service: "{{ full_service_name }}"
       annotations:
         summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas'
         description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}'."
         {%- endif %}
-    DockerService{{ camel_case_name }}NoReplica:
+    DockerService{{ camel_case_name }}ReplicasDown:
       if: >-
         count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) == 0 or absent(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}) == 1
       labels:
-        severity: critical
-        service: docker
+        severity: down
+        service: "{{ full_service_name }}"
       annotations:
         summary: 'Docker Swarm service {{ full_service_name }} down'
         description: "No replicas are running for the Docker Swarn service '{{ full_service_name }}'."
