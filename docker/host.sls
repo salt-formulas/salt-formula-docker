@@ -48,6 +48,8 @@ network.ipv4.ip_forward:
   - makedirs: True
   - require_in:
     - service: docker_service
+  - watch_in:
+    - service: docker_service
 
 {% else %}
 
