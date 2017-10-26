@@ -56,7 +56,7 @@ docker_{{ app }}_env:
           {%- set path = None %}
         {%- endif %}
 
-        {%- if path != None and path not in compose.volume.keys() %}
+        {%- if path != None and path not in compose.get('volume', {}).keys() %}
 docker_{{ app }}_{{ name }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
