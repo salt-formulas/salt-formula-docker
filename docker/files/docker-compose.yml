@@ -1,5 +1,10 @@
 version: '{{ compose.version|default("3") }}'
 
+{%- if compose.config|default({}) %}
+configs:
+  {{ compose.config|yaml(False)|indent(2) }}
+{%- endif %}
+
 services:
   {%- for name, srv in service.iteritems() %}
   {%- set env_file_set = False %}
