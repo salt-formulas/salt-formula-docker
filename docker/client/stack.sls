@@ -52,9 +52,11 @@ docker_{{ app }}_env:
           {%- set path = volume.split(':')[0] %}
         {%- elif volume is mapping and volume.get('type', 'bind') == 'bind' %}
           {%- set path = volume.source %}
+        {%- else %}
+          {%- set path = None %}
         {%- endif %}
 
-        {%- if path is defined %}
+        {%- if path != None and path not in compose.get('volume', {}).keys() %}
 docker_{{ app }}_{{ name }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
