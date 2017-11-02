@@ -1,5 +1,5 @@
 {% from "docker/map.jinja" import client with context %}
-{%- if client.get('enabled') %}
+{%- if client.get('enabled', False) %}
 
 include:
   {%- if client.network is defined %}

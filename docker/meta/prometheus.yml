@@ -2,7 +2,7 @@
 
 server:
   alert:
-{%- if host.get('enabled') %}
+{%- if host.get('enabled', False) %}
     DockerdProcessDown:
       if: >-
         procstat_running{process_name="dockerd"} == 0
@@ -15,7 +15,7 @@ server:
         description: 'Dockerd service is down on node {{ $labels.host }}'
   {%- endraw %}
 {%- endif %}
-{%- if client.get('enabled') %}
+{%- if client.get('enabled', False) %}
   {%- for stack_name, stack in client.get('stack', {})|dictsort %}
     {%- for service_name, service in stack.get('service', {})|dictsort %}
       {%- if service.get('deploy', {}).replicas is defined %}
