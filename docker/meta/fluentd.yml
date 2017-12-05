@@ -1,0 +1,42 @@
+{%- if pillar.get('fluentd', {}).get('agent', {}).get('enabled', False) %}
+{%- set positiondb = pillar.fluentd.agent.dir.positiondb %}
+agent:
+  config:
+    label:
+      docker:
+        input:
+          container:
+            type: tail
+            tag: temp.docker.container.*
+            path: /var/lib/docker/containers/*/*-json.log
+            path_key: log_path
+            pos_file: {{ positiondb }}/docker.container.pos
+            parser:
+              type: json
+              time_format: '%Y-%m-%dT%H:%M:%S.%NZ'
+              keep_time_key: false
+        filter:
+          enrich:
+            tag: 'temp.docker.container.**'
+            type: record_transformer
+            enable_ruby: true
+            record:
+              - name: severity_label
+                value: INFO
+              - name: Severity
+                value: 6
+              - name: programname
+                value: docker
+        match:
+          cast_service_tag:
+            tag: 'temp.docker.container.**'
+            type: rewrite_tag_filter
+            rule:
+              - name: log_path
+                regexp: '^.*\/(.*)-json\.log$'
+                result: docker.container.$1
+          push_to_default:
+            tag: 'docker.container.*'
+            type: relabel
+            label: default_output
+{%- endif %}
