@@ -1,6 +1,8 @@
 parameters:
   docker:
     _support:
+      fluentd:
+        enabled: true
       telegraf:
         enabled: true
       collectd:
