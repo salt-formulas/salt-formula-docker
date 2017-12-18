@@ -279,6 +279,65 @@ Docker login to private registry
             password: password2
 
 
+Docker container service management
+-----------------------------------
+
+Enforce the service in container is started
+
+.. code-block:: yaml
+
+    contrail_control_started:
+      dockerng_service.start:
+        - container: f020d0d3efa8
+        - service: contrail-control
+
+or
+
+.. code-block:: yaml
+
+    contrail_control_started:
+      dockerng_service.start:
+        - container: contrail_controller
+        - service: contrail-control
+
+
+Enforce the service in container is stoped
+
+.. code-block:: yaml
+
+    contrail_control_stoped:
+      dockerng_service.stop:
+        - container: f020d0d3efa8
+        - service: contrail-control
+
+Enforce the service in container will be restarted
+
+.. code-block:: yaml
+
+    contrail_control_restart:
+      dockerng_service.restart:
+        - container: f020d0d3efa8
+        - service: contrail-control
+
+Enforce the service in container is enabled
+
+.. code-block:: yaml
+
+    contrail_control_enable:
+      dockerng_service.enable:
+        - container: f020d0d3efa8
+        - service: contrail-control
+
+Enforce the service in container is disabled
+
+.. code-block:: yaml
+
+    contrail_control_disable:
+      dockerng_service.disable:
+        - container: f020d0d3efa8
+        - service: contrail-control
+
+
 More Information
 ================
 
