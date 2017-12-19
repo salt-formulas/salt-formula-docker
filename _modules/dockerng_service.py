@@ -41,6 +41,16 @@ def status(container, service):
     return result
 
 
+def status_retcode(container, service):
+    cmd = "systemctl show " + service + " -p ActiveState,SubState,UnitFileState"
+    data =  __salt__['dockerng.run'](container, cmd)
+    data = data.splitlines()
+    result = dict(s.split('=') for s in data)
+    if result['ActiveState'] == "active" and result['SubState'] == "running":
+        return True
+    return False
+
+
 def restart(container, service):
     cmd = "systemctl restart " + service
     data =  __salt__['dockerng.run'](container, cmd)
@@ -87,4 +97,3 @@ def disable(container, service):
     if len(data) > 0:
         return False
     return True
-
