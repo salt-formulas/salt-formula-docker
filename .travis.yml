@@ -17,15 +17,16 @@ install:
   - bundle install
 
 env:
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=client_compose
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=client_container
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=host_single
+  - PLATFORM=trevorj/salty-whales:xenial SUITE=client-compose
+  - PLATFORM=trevorj/salty-whales:xenial SUITE=client-container
+  - PLATFORM=trevorj/salty-whales:xenial SUITE=host-single
 
 before_script:
   - make test | tail
 
 script:
-  - KITCHEN_LOCAL_YAML=.kitchen.travis.yml bundle exec kitchen test -t tests/integration
+  - test ! -e .kitchen.yml || bundle exec kitchen converge ${SUITE} || true
+  - test ! -e .kitchen.yml || bundle exec kitchen verify ${SUITE} -t tests/integration
 
 notifications:
   webhooks:
