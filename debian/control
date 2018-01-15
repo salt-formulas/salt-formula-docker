@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/tcpcloud/salt-formula-docker.git
 
 Package: salt-formula-docker
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: docker salt formula
  Install and configure docker system.
