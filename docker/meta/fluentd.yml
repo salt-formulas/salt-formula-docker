@@ -20,6 +20,7 @@ agent:
             tag: 'temp.docker.container.**'
             type: record_transformer
             enable_ruby: true
+            remove_keys: log
             record:
               - name: severity_label
                 value: INFO
@@ -27,6 +28,8 @@ agent:
                 value: 6
               - name: programname
                 value: docker
+              - name: Payload
+                value: ${record['log']}
         match:
           cast_service_tag:
             tag: 'temp.docker.container.**'
