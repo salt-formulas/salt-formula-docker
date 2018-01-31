@@ -26,31 +26,34 @@ server:
     DockerService{{ camel_case_name }}WarningReplicasNumber:
       if: >-
         count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_warning_threshold_percent }}
+      for: 2m
       labels:
         severity: warning
         service: "{{ full_service_name }}"
       annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas'
-        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas for 2 minutes'
+        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}' for 2 minutes."
     DockerService{{ camel_case_name }}CriticalReplicasNumber:
       if: >-
         count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_critical_threshold_percent }}
+      for: 2m
       labels:
         severity: critical
         service: "{{ full_service_name }}"
       annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas'
-        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas for 2 minutes'
+        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}' for 2 minutes."
         {%- endif %}
     DockerService{{ camel_case_name }}ReplicasDown:
       if: >-
         count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) == 0 or absent(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}) == 1
+      for: 2m
       labels:
         severity: down
         service: "{{ full_service_name }}"
       annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} down'
-        description: "No replicas are running for the Docker Swarn service '{{ full_service_name }}'."
+        summary: 'Docker Swarm service {{ full_service_name }} down for 2 minutes'
+        description: "No replicas are running for the Docker Swarn service '{{ full_service_name }}'. for 2 minutes"
       {%- endif %}
     {%- endfor %}
   {%- endfor %}
