@@ -38,7 +38,7 @@ network.ipv4.ip_forward:
   - watch_in:
     - service: docker_service
 
-{%- if host.get('proxy', {}).get('enabled') %}
+{%- if host.get('proxy', {}).get('enabled', False) %}
 {%- if host.proxy.get('http') or host.proxy.get('https') or host.proxy.get('no_proxy') %}
 
 /etc/systemd/system/docker.service.d/http-proxy.conf:
