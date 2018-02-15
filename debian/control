@@ -2,7 +2,7 @@ Source: salt-formula-docker
 Maintainer: Michael Kuty <michael.kuty@tcpcloud.eu>
 Section: admin
 Priority: optional
-Build-Depends: salt-master, python, python-yaml, debhelper (>= 9), salt-master, python, python-yaml, salt-formula-linux
+Build-Depends: salt-master, python, python-yaml, debhelper (>= 9), salt-master, python, python-yaml
 Standards-Version: 3.9.6
 Homepage: http://www.tcpcloud.eu
 Vcs-Browser: https://github.com/tcpcloud/salt-formula-docker

@@ -1,5 +1,4 @@
 {% from "docker/map.jinja" import swarm with context %}
-{% from "linux/map.jinja" import network with context %}
 {%- if swarm.enabled|default(True) %}
 
 include:
@@ -43,7 +42,7 @@ docker_swarm_init:
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
     - unless:
       - "test -e /var/lib/docker/swarm/state.json"
-      - "docker node ls | grep -q '{{ network.hostname }}'"
+      - "docker node ls | grep -q '{{ grains.nodename }}'"
     - require:
       - service: docker_service
 

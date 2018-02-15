@@ -1,6 +1,3 @@
 name: "docker"
 version: "0.2"
 source: "https://github.com/salt-formulas/salt-formula-docker"
-dependencies:
-- name: linux
-  source: "https://github.com/salt-formulas/salt-formula-linux"
