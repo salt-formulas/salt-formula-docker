@@ -17,9 +17,15 @@ install:
   - bundle install
 
 env:
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=client-compose
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=client-container
-  - PLATFORM=trevorj/salty-whales:xenial SUITE=host-single
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=client-compose
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=client-container
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=host-single
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=client-compose
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=client-container
+  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=host-single
+#  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=client-compose
+#  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=client-container
+#  - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=host-single
 
 before_script:
   - make test | tail
