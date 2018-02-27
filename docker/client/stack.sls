@@ -71,16 +71,21 @@ docker_{{ app }}_{{ name }}_volume_{{ path }}:
 docker_stack_{{ app }}:
   cmd.run:
     - name: >
+        retry=5
         i=1;
-        while [ $i -lt 5 ]; do
-        docker stack deploy --compose-file docker-compose.yml {{ app }};
-        ret=$?;
-        [ $ret -eq 0 ] && exit 0;
-        echo "Stack creation failed, retrying in 3 seconds.." >&2;
-        sleep 3;
-        i=$[ $i + 1 ];
-        exit 1;
-        done
+        while [[ $i -lt $retry ]]; do
+          docker stack deploy --compose-file docker-compose.yml {{ app }};
+          ret=$?;
+          if [[ $ret -eq 0 ]]; then echo 'Stack created'; break;
+          else
+            echo "Stack creation failed, retrying in 3 seconds.." >&2;
+            sleep 3;
+            i=$(( i + 1 ));
+          fi;
+          if [[ $i -ge $retry ]]; then
+            echo "Stack creation failed!"; exit 1;
+          fi;
+        done;
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
@@ -92,16 +97,21 @@ docker_stack_{{ app }}:
 docker_stack_{{ app }}_update:
   cmd.wait:
     - name: >
+        retry=5
         i=1;
-        while [ $i -lt 5 ]; do
-        docker stack deploy --compose-file docker-compose.yml {{ app }};
-        ret=$?;
-        [ $ret -eq 0 ] && exit 0;
-        echo "Stack update failed, retrying in 3 seconds.." >&2;
-        sleep 3;
-        i=$[ $i + 1 ];
-        exit 1;
-        done
+        while [[ $i -lt $retry ]]; do
+          docker stack deploy --compose-file docker-compose.yml {{ app }};
+          ret=$?;
+          if [[ $ret -eq 0 ]]; then echo 'Stack updated'; break;
+          else
+            echo "Stack update failed, retrying in 3 seconds.." >&2;
+            sleep 3;
+            i=$(( i + 1 ));
+          fi;
+          if [[ $i -ge $retry ]]; then
+            echo "Stack update failed!"; exit 1;
+          fi;
+        done;
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
     - user: {{ compose.user|default("root") }}
