@@ -9,3 +9,4 @@ agent:
       timeout: 5
       perdevice: true
       total: false
+      gather_services: true
