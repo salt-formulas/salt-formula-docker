@@ -21,11 +21,11 @@ server:
       {%- if service.get('deploy', {}).replicas is defined %}
         {%- set full_service_name = "{}_{}".format(stack_name, service_name) %}
         {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
-        {%- set label_selector = 'com_docker_swarm_service_name="{}_{}"'.format(stack_name, service_name) %}
+        {%- set label_selector = 'service_name="{}_{}"'.format(stack_name, service_name) %}
         {%- if service.deploy.replicas > 1 %}
     DockerService{{ camel_case_name }}WarningReplicasNumber:
       if: >-
-        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_warning_threshold_percent }}
+        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_warning_threshold_percent }}
       for: 2m
       labels:
         severity: warning
@@ -35,7 +35,7 @@ server:
         description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}' for 2 minutes."
     DockerService{{ camel_case_name }}CriticalReplicasNumber:
       if: >-
-        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_critical_threshold_percent }}
+        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_critical_threshold_percent }}
       for: 2m
       labels:
         severity: critical
@@ -46,7 +46,7 @@ server:
         {%- endif %}
     DockerService{{ camel_case_name }}ReplicasDown:
       if: >-
-        count(count_over_time(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}[1m])) == 0 or absent(docker_container_cpu_usage_percent{{ '{' + label_selector + '}' }}) == 1
+        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} == 0 or absent(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) == 1
       for: 2m
       labels:
         severity: down
