@@ -8,8 +8,10 @@ include:
   {%- set id = name %}
   {%- set required_containers = [] %}
 
+{%- if not grains.get('noservices') %}
+
 {{id}}_image:
-  {%- if grains['saltversioninfo'][0] >= 2017 %}
+  {%- if grains['saltversioninfo'] >= [2017, 7, 0] %}
   docker_image.present:
   {%- else %}
   dockerng.image_present:
@@ -19,37 +21,38 @@ include:
     - build: {{ container.build }}
     {%- endif %}
     - force: {{ container.force|default(False) }}
-    {%- if grains.get('noservices') %}
-    - onlyif: /bin/false
-    {%- endif %}
     - require:
       - pkg: docker_python
+
+{%- endif %}
 
 {%- set binds = {} %}
 {%- set volumes = {} %}
 {%- for volume in container.get('volumes', []) %}
 
-{%- set volume_parts = volume.split(':') %}
-{%- set path = volume_parts[0] %}
+  {%- set volume_parts = volume.split(':') %}
+  {%- set path = volume_parts[0] %}
 
-{%- if volume_parts is iterable and volume_parts|length > 1 %}
-{# volume is bind #}
-{%- do binds.update({volume:volume}) %}
-{%- else %}
-{%- do volumes.update({volume:volume}) %}
-{%- endif %}
+  {%- if volume_parts is iterable and volume_parts|length > 1 %}
+  {# volume is bind #}
+    {%- do binds.update({volume:volume}) %}
+  {%- else %}
+    {%- do volumes.update({volume:volume}) %}
+  {%- endif %}
 
-{%- if path.startswith('/') and container.makedirs|default(True) %}
+  {%- if path.startswith('/') and container.makedirs|default(True) %}
 {{ id }}_volume_{{ path }}:
   file.directory:
     - name: {{ path }}
     - makedirs: true
-{%- endif %}
+  {%- endif %}
 
 {%- endfor %}
 
+{%- if not grains.get('noservices') %}
+
 {{id}}_container:
-  {%- if grains['saltversioninfo'][0] >= 2017 %}
+  {%- if grains['saltversioninfo'] >= [2017, 7, 0] %}
   docker_container.running:
   {%- else %}
   dockerng.running:
@@ -58,9 +61,6 @@ include:
     - start: {{ container.start|default(True) }}
     - user: {{ container.user|default("root") }}
     - image: {{container.image}}
-    {%- if grains.get('noservices') %}
-    - onlyif: /bin/false
-    {%- endif %}
   {%- if 'command' in container %}
     - command: {{container.command}}
   {%- endif %}
@@ -107,14 +107,14 @@ include:
     - restart_policy: {{ container.restart }}
   {%- endif %}
     - watch:
-  {%- if grains['saltversioninfo'][0] >= 2017 %}
+  {%- if grains['saltversioninfo'] >= [2017, 7, 0] %}
       - docker_image: {{id}}_image
   {%- else %}
       - dockerng: {{id}}_image
-  {%- endif %}    
+  {%- endif %}
   {%- if required_containers is defined %}
     {%- for containerid in required_containers %}
-      {%- if grains['saltversioninfo'][0] >= 2017 %}
+      {%- if grains['saltversioninfo'] >= [2017, 7, 0] %}
       - docker_container: {{containerid}}
       {%- else %}
       - dockerng: {{containerid}}
@@ -126,5 +126,7 @@ include:
     - {{ key }}: {{ value }}
     {%- endif %}
   {%- endfor %}
+
+{%- endif %}
 
 {% endfor %}
