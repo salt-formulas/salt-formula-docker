@@ -1,5 +1,4 @@
 {% from "docker/map.jinja" import host, client, monitoring with context %}
-
 server:
   alert:
 {%- if host.get('enabled', False) %}
@@ -8,11 +7,22 @@ server:
         procstat_running{process_name="dockerd"} == 0
   {%- raw %}
       labels:
-        severity: warning
+        severity: minor
         service: docker
       annotations:
-        summary: 'Dockerd service is down'
-        description: 'Dockerd service is down on node {{ $labels.host }}'
+        summary: "Dockerd process is down"
+        description: "The Dockerd process on the {{ $labels.host }} node is down."
+  {%- endraw %}
+    DockerServiceOutage:
+      if: >-
+        count(label_replace(procstat_running{process_name="dockerd"}, "cluster", "$1", "host", "([^0-9]+).+")) by (cluster) == count(label_replace(procstat_running{process_name="dockerd"} == 0, "cluster", "$1", "host", "([^0-9]+).+")) by (cluster)
+  {%- raw %}
+      labels:
+        severity: critical
+        service: docker
+      annotations:
+        summary: "Docker cluster outage"
+        description: "All Dockerd processes within the {{ $labels.cluster }} cluster are down."
   {%- endraw %}
 {%- endif %}
 {%- if client.get('enabled', False) %}
@@ -23,37 +33,43 @@ server:
         {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
         {%- set label_selector = 'service_name="{}_{}"'.format(stack_name, service_name) %}
         {%- if service.deploy.replicas > 1 %}
-    DockerService{{ camel_case_name }}WarningReplicasNumber:
+    DockerService{{ camel_case_name }}ReplicasDownMinor:
       if: >-
-        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_warning_threshold_percent }}
+        {{ service.deploy.replicas }} - min(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) >= {{ service.deploy.replicas }} * {{ monitoring.replicas_failed_warning_threshold_percent }}
+  {%- raw %}
       for: 2m
       labels:
-        severity: warning
-        service: "{{ full_service_name }}"
+        severity: minor
+        service: docker
       annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas for 2 minutes'
-        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}' for 2 minutes."
-    DockerService{{ camel_case_name }}CriticalReplicasNumber:
+        summary: "{%- endraw %}{{monitoring.replicas_failed_warning_threshold_percent*100}}%{%- raw %} of Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down"
+        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for at least 2 minutes."
+  {%- endraw %}
+    DockerService{{ camel_case_name }}ReplicasDownMajor:
       if: >-
-        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} <= {{ service.deploy.replicas }} * {{ 1 - monitoring.replicas_failed_critical_threshold_percent }}
+        {{ service.deploy.replicas }} - min(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) >= {{ service.deploy.replicas }} * {{ monitoring.replicas_failed_critical_threshold_percent }}
+  {%- raw %}
+      for: 2m
+      labels:
+        severity: major
+        service: docker
+      annotations:
+        summary: "{%- endraw %}{{monitoring.replicas_failed_critical_threshold_percent*100}}%{%- raw %} of Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down"
+        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for at least 2 minutes."
+  {%- endraw %}
+        {%- endif %}
+    DockerService{{ camel_case_name }}Outage:
+      if: >-
+        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} == 0 or absent(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) == 1
+  {%- raw %}
       for: 2m
       labels:
         severity: critical
-        service: "{{ full_service_name }}"
+        service: docker
       annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} invalid number of replicas for 2 minutes'
-        description: "{%raw %}{{ $value }}{%- endraw %}/{{ service.deploy.replicas }} replicas are running for the Docker Swarn service '{{ full_service_name }}' for 2 minutes."
-        {%- endif %}
-    DockerService{{ camel_case_name }}ReplicasDown:
-      if: >-
-        docker_swarm_tasks_running{{ '{' + label_selector + '}' }} == 0 or absent(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) == 1
-      for: 2m
-      labels:
-        severity: down
-        service: "{{ full_service_name }}"
-      annotations:
-        summary: 'Docker Swarm service {{ full_service_name }} down for 2 minutes'
-        description: "No replicas are running for the Docker Swarn service '{{ full_service_name }}'. for 2 minutes"
+        summary: "Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service outage"
+        description: "All Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' replicas are down for at least 2 minutes."
+  {%- endraw %}
       {%- endif %}
     {%- endfor %}
   {%- endfor %}
