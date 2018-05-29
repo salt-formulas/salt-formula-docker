@@ -7,13 +7,6 @@ docker_requirements:
   pkg.installed:
     - pkgs:
       - yum-utils
-
-docker_repo:
-  pkgrepo.managed:
-    - humanname: Docker repo
-    - baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
-    - gpgcheck: 1
-    - gpgkey: https://download.docker.com/linux/centos/gpg
 {%- endif %}
 
 docker_packages:

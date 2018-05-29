@@ -1,0 +1,10 @@
+parameters:
+  linux:
+    system:
+      repo:
+        docker:
+          enabled: true
+          humanname: Docker repo
+          source: https://download.docker.com/linux/centos/7/$basearch/stable
+          gpgcheck: 1
+          gpgkey: https://download.docker.com/linux/centos/gpg
