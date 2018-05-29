@@ -117,4 +117,3 @@ docker_{{ registry.get('address', name) }}_login:
 {%- endif %}
 
 {%- endif %}
-
