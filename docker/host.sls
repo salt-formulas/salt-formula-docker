@@ -2,9 +2,24 @@
 
 {%- if host.enabled %}
 
+{%- if grains.os == 'CentOS' %}
+docker_requirements:
+  pkg.installed:
+    - pkgs:
+      - yum-utils
+
+docker_repo:
+  pkgrepo.managed:
+    - humanname: Docker repo
+    - baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    - gpgcheck: 1
+    - gpgkey: https://download.docker.com/linux/centos/gpg
+{%- endif %}
+
 docker_packages:
   pkg.installed:
   - pkgs: {{ host.pkgs }}
+
 
 {%- if grains.get('virtual_subtype', None) not in ['Docker', 'LXC'] %}
 
@@ -28,6 +43,21 @@ network.ipv4.ip_forward:
 
 {%- endif %}
 
+
+{%- if grains.os == 'RedHat' or grains.os == 'CentOS' %}
+
+/etc/sysconfig/docker-storage-setup:
+  file.managed:
+  - source: salt://docker/files/docker-storage-setup
+  - template: jinja
+  - makedirs: True
+  - require:
+    - pkg: docker_packages
+  - watch_in:
+    - service: docker_service
+
+{%- else %}
+
 /etc/docker/daemon.json:
   file.managed:
   - source: salt://docker/files/daemon.json
@@ -37,6 +67,8 @@ network.ipv4.ip_forward:
     - pkg: docker_packages
   - watch_in:
     - service: docker_service
+
+{%- endif %}
 
 {%- if host.get('proxy', {}).get('enabled', False) %}
 {%- if host.proxy.get('http') or host.proxy.get('https') or host.proxy.get('no_proxy') %}
@@ -92,3 +124,4 @@ docker_{{ registry.get('address', name) }}_login:
 {%- endif %}
 
 {%- endif %}
+
