@@ -1,0 +1,8 @@
+{%- from "docker/map.jinja" import host with context -%}
+# Edit this file to override any configuration options specified in
+# /usr/share/container-storage-setup/container-storage-setup.
+#
+# For more details refer to "man container-storage-setup"
+CONTAINER_THINPOOL=docker-pool
+VG={{ host.get('volumegroup', 'vg1') }}
+DATA_SIZE={{ host.get('volumegroup_free', 'vg1') }}%FREE

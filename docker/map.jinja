@@ -1,15 +1,15 @@
 
 {% set host = salt['grains.filter_by']({
     'CentOS': {
-        'pkgs': ['docker-io'],
+        'pkgs': ['docker-ce','python-docker-py'],
         'service': 'docker',
     },
     'Debian': {
-        'pkgs': ['docker.io'],
+        'pkgs': ['docker-ce'],
         'service': 'docker',
     },
     'RedHat': {
-        'pkgs': ['iptables', 'lxc-docker'],
+        'pkgs': ['docker', 'python-docker-py'],
         'service': 'docker',
     },
     'Ubuntu': {
