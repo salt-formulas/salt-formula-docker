@@ -11,7 +11,7 @@ server:
         service: docker
       annotations:
         summary: "Dockerd process is down"
-        description: "The Dockerd process on the {{ $labels.host }} node is down."
+        description: "The dockerd process on the {{ $labels.host }} node is down."
   {%- endraw %}
     DockerServiceOutage:
       if: >-
@@ -22,7 +22,7 @@ server:
         service: docker
       annotations:
         summary: "Docker cluster outage"
-        description: "All Dockerd processes within the {{ $labels.cluster }} cluster are down."
+        description: "All dockerd processes within the {{ $labels.cluster }} cluster are down."
   {%- endraw %}
 {%- endif %}
 {%- if client.get('enabled', False) %}
@@ -43,7 +43,7 @@ server:
         service: docker
       annotations:
         summary: "{%- endraw %}{{monitoring.replicas_failed_warning_threshold_percent*100}}%{%- raw %} of Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down"
-        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for at least 2 minutes."
+        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for 2 minutes."
   {%- endraw %}
     DockerService{{ camel_case_name }}ReplicasDownMajor:
       if: >-
@@ -55,7 +55,7 @@ server:
         service: docker
       annotations:
         summary: "{%- endraw %}{{monitoring.replicas_failed_critical_threshold_percent*100}}%{%- raw %} of Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down"
-        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for at least 2 minutes."
+        description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for 2 minutes."
   {%- endraw %}
         {%- endif %}
     DockerService{{ camel_case_name }}Outage:
@@ -68,7 +68,7 @@ server:
         service: docker
       annotations:
         summary: "Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service outage"
-        description: "All Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' replicas are down for at least 2 minutes."
+        description: "All Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' replicas are down for 2 minutes."
   {%- endraw %}
       {%- endif %}
     {%- endfor %}
