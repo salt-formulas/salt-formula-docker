@@ -3,8 +3,9 @@
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:88",
         "builtIn": 1,
-        "datasource": "default",
+        "datasource": "prometheus",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -17,7 +18,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1528900893451,
+  "iteration": 1529504006860,
   "links": [],
   "panels": [
     {
@@ -33,8 +34,8 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
+      "colorBackground": false,
+      "colorValue": true,
       "colors": [
         "#d44a3a",
         "rgba(237, 129, 40, 0.89)",
@@ -72,7 +73,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "postfix": "% Up",
+      "postfix": "% UP",
       "postfixFontSize": "80%",
       "prefix": "",
       "prefixFontSize": "50%",
@@ -179,6 +180,528 @@
       ],
       "repeat": "host",
       "repeatDirection": "h",
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "cid01",
+          "value": "cid01"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "procstat_running{process_name=\"dockerd\", host=\"$host\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0.5,1",
+      "title": "Docker@${host}",
+      "transparent": false,
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Fail",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "OK",
+          "value": "1"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#d44a3a",
+        "rgba(237, 129, 40, 0.89)",
+        "#299c46"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 5
+      },
+      "id": 152,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "minSpan": 1,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "repeat": null,
+      "repeatDirection": "h",
+      "repeatIteration": 1529504006860,
+      "repeatPanelId": 8,
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "cid02",
+          "value": "cid02"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "procstat_running{process_name=\"dockerd\", host=\"$host\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0.5,1",
+      "title": "Docker@${host}",
+      "transparent": false,
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Fail",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "OK",
+          "value": "1"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#d44a3a",
+        "rgba(237, 129, 40, 0.89)",
+        "#299c46"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 5
+      },
+      "id": 153,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "minSpan": 1,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "repeat": null,
+      "repeatDirection": "h",
+      "repeatIteration": 1529504006860,
+      "repeatPanelId": 8,
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "cid03",
+          "value": "cid03"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "procstat_running{process_name=\"dockerd\", host=\"$host\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0.5,1",
+      "title": "Docker@${host}",
+      "transparent": false,
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Fail",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "OK",
+          "value": "1"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#d44a3a",
+        "rgba(237, 129, 40, 0.89)",
+        "#299c46"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 5
+      },
+      "id": 154,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "minSpan": 1,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "repeat": null,
+      "repeatDirection": "h",
+      "repeatIteration": 1529504006860,
+      "repeatPanelId": 8,
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "mon01",
+          "value": "mon01"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "procstat_running{process_name=\"dockerd\", host=\"$host\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0.5,1",
+      "title": "Docker@${host}",
+      "transparent": false,
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Fail",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "OK",
+          "value": "1"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#d44a3a",
+        "rgba(237, 129, 40, 0.89)",
+        "#299c46"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 16,
+        "y": 5
+      },
+      "id": 155,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "minSpan": 1,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "repeat": null,
+      "repeatDirection": "h",
+      "repeatIteration": 1529504006860,
+      "repeatPanelId": 8,
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "mon02",
+          "value": "mon02"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "procstat_running{process_name=\"dockerd\", host=\"$host\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0.5,1",
+      "title": "Docker@${host}",
+      "transparent": false,
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Fail",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "OK",
+          "value": "1"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#d44a3a",
+        "rgba(237, 129, 40, 0.89)",
+        "#299c46"
+      ],
+      "datasource": null,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "id": 156,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "minSpan": 1,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "repeat": null,
+      "repeatDirection": "h",
+      "repeatIteration": 1529504006860,
+      "repeatPanelId": 8,
+      "scopedVars": {
+        "host": {
+          "selected": false,
+          "text": "mon03",
+          "value": "mon03"
+        }
+      },
       "sparkline": {
         "fillColor": "rgba(31, 118, 189, 0.18)",
         "full": false,
@@ -270,7 +793,7 @@
         {
           "expr": "100 * sum(procstat_running{process_name=\"dockerd\"})/count(procstat_running{process_name=\"dockerd\"})",
           "format": "time_series",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "refId": "A"
         }
       ],
@@ -320,7 +843,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -357,35 +880,35 @@
         }
       ],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "expr": "sum(docker_n_containers_stopped{host=~\"$host\"})",
           "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Stopped",
+          "intervalFactor": 2,
+          "legendFormat": "stopped",
           "refId": "A"
         },
         {
           "expr": "sum(docker_n_containers_paused{host=~\"$host\"})",
           "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Paused",
+          "intervalFactor": 2,
+          "legendFormat": "paused",
           "refId": "B"
         },
         {
           "expr": "sum(docker_n_containers_running{host=~\"$host\"})",
           "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Running",
+          "intervalFactor": 2,
+          "legendFormat": "running",
           "refId": "C"
         },
         {
           "expr": "sum(docker_n_containers{host=~\"$host\"})",
           "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Total",
+          "intervalFactor": 2,
+          "legendFormat": "total",
           "refId": "D"
         }
       ],
@@ -435,7 +958,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -455,7 +978,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
@@ -464,13 +987,13 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "expr": "docker_n_containers{host=~\"$host\"}",
           "format": "time_series",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{host}}",
           "refId": "A"
         }
@@ -521,7 +1044,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -550,13 +1073,13 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "expr": "docker_n_containers_stopped{host=~\"$host\"}",
           "format": "time_series",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{host}}",
           "refId": "A"
         }
@@ -607,7 +1130,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -627,7 +1150,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
@@ -636,13 +1159,13 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "expr": "docker_n_images{host=~\"$host\"}",
           "format": "time_series",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{host}}",
           "refId": "A"
         }
@@ -693,7 +1216,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -713,7 +1236,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
@@ -722,13 +1245,13 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "expr": "docker_n_containers_running{host=~\"$host\"}",
           "format": "time_series",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{host}}",
           "refId": "A"
         }
@@ -792,7 +1315,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -812,7 +1335,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
@@ -822,7 +1345,7 @@
       "repeat": null,
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
@@ -830,7 +1353,7 @@
           "format": "time_series",
           "instant": false,
           "interval": "",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{host}}",
           "refId": "A"
         }
@@ -881,7 +1404,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 12,
@@ -901,7 +1424,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "minSpan": 2,
       "nullPointMode": "null",
@@ -913,23 +1436,23 @@
       "repeatDirection": "v",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(diskio_write_bytes{host=~\"$host\", name=~\"^[a-z]+?$\"}[5m])",
+          "expr": "rate(diskio_write_bytes{host=~\"$host\", name=~\"^[a-z]+?$\"}[$rate_interval])",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 2,
-          "legendFormat": "Write {{host}}",
+          "legendFormat": "write {{host}}",
           "refId": "A",
           "step": 120
         },
         {
-          "expr": "irate(diskio_read_bytes{host=~\"$host\", name=~\"^[a-z]+?$\"}[5m])",
+          "expr": "rate(diskio_read_bytes{host=~\"$host\", name=~\"^[a-z]+?$\"}[$rate_interval])",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Read {{host}}",
+          "legendFormat": "read {{host}}",
           "refId": "B",
           "step": 120
         }
@@ -980,7 +1503,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fill": 5,
+      "fill": 1,
       "gridPos": {
         "h": 5,
         "w": 24,
@@ -1001,7 +1524,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "links": [],
       "minSpan": 3,
       "nullPointMode": "null",
@@ -1013,7 +1536,7 @@
       "repeatDirection": "v",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
@@ -1066,6 +1589,7 @@
       }
     }
   ],
+  "refresh": "1m",
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
@@ -1073,7 +1597,11 @@
     "list": [
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": null,
         "hide": 0,
         "includeAll": true,
@@ -1090,6 +1618,54 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": true,
+          "text": "3m",
+          "value": "3m"
+        },
+        "hide": 0,
+        "label": null,
+        "name": "rate_interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "2m",
+            "value": "2m"
+          },
+          {
+            "selected": true,
+            "text": "3m",
+            "value": "3m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "15m",
+            "value": "15m"
+          }
+        ],
+        "query": "1m,2m,3m,5m,10m,15m",
+        "refresh": 2,
+        "type": "interval"
       }
     ]
   },
