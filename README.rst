@@ -56,7 +56,7 @@ Metadata for manager (first node):
       host:
         enabled: true
       swarm:
-        role: manager
+        role: master
         advertise_addr: 192.168.1.5
         bind:
           address: 192.168.1.5
