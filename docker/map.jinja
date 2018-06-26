@@ -1,7 +1,7 @@
 
 {% set host = salt['grains.filter_by']({
     'CentOS': {
-        'pkgs': ['docker-io'],
+        'pkgs': ['docker-ce'],
         'service': 'docker',
     },
     'Debian': {
@@ -30,6 +30,16 @@
 {% set client = salt['grains.filter_by']({
     'default': {
         'pkgs': ['python-docker'],
+        'compose': {
+          'base': '/etc/docker/compose',
+          'source': {
+            'engine': 'pkg',
+            'pkgs': ['docker-compose'],
+          },
+        },
+    },
+    'CentOS': {
+        'pkgs': ['python-docker-py'],
         'compose': {
           'base': '/etc/docker/compose',
           'source': {
