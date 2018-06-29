@@ -1,17 +1,21 @@
+=====
+Usage
+=====
 
-==============
-Docker Formula
-==============
+Docker is a platform for developers and system administrators for developing,
+shipping, and running applications. Docker enables you to quickly assemble
+applications from components and eliminates the friction that can come when
+shipping the code. Also, with Docker, you get your code tested and deployed
+into production as fast as possible.
 
-Docker is a platform for developers and sysadmins to develop, ship, and run applications. Docker lets you quickly assemble applications from components and eliminates the friction that can come when shipping code. Docker lets you get your code tested and deployed into production as fast as possible.
+This file provides the sample configurations for different use cases.
 
-Sample Pillars
-==============
+Docker host configuration samples
+=================================
 
-Docker Host
------------
+* Docker host sample pillar configuration:
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       host:
@@ -25,10 +29,9 @@ Docker Host
           log-opts:
             max-size: 50m
 
+* Proxy configuration for Docker host:
 
-Configure proxy for docker host
-
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       host:
@@ -42,15 +45,15 @@ Configure proxy for docker host
             - docker-registry
 
 
-Docker Swarm
-------------
+Docker Swarm configuration samples
+==================================
 
-Role can be master, manager or worker. Where master is the first manager that
+Role can be master, manager, or worker. Master is the first manager that
 will initialize the swarm.
 
-Metadata for manager (first node):
+* Metadata for manager (the first node):
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       host:
@@ -62,9 +65,9 @@ Metadata for manager (first node):
           address: 192.168.1.5
           port: 2377
 
-Metadata for worker.
+* Metadata for worker:
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       host:
@@ -75,17 +78,16 @@ Metadata for worker.
           host: 192.168.1.5
           port: 2377
 
-Token to join to master node is obtained from grains using salt.mine.  In case
-of any ``join_token undefined`` issues, ensure you have ``docker_swarm_``
-grains available.
+The token to join to the master node is obtained from grains using
+``salt.mine``.  In case of any ``join_token undefined`` issues, verify that
+you have ``docker_swarm_`` grains available.
 
-Docker Client
--------------
+Docker client configuration samples
+===================================
 
-Container
-~~~~~~~~~
+* Container:
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       client:
@@ -103,88 +105,84 @@ Container
             volumes:
               - /srv/volumes/jenkins:/var/jenkins_home
 
-Using Docker Compose
-~~~~~~~~~~~~~~~~~~~~
+* Docker compose:
 
-There are two states that provides this functionality:
+  The states providing this functionality include:
 
-- docker.client.stack
-- docker.client.compose
+  - docker.client.stack
+  - docker.client.compose
 
-Stack is new and works with Docker Swarm Mode. Compose is legacy and works
-only if node isn't member of Swarm.
-Metadata for both states are similar and differs only in implementation.
+  Stack is new and works with Docker Swarm Mode.
+  Compose is legacy and works only if node is not a member of Swarm.
+  Metadata for both states are similar and differs only in implementation.
 
-Stack
-^^^^^
+  * Stack:
 
-.. code-block:: yaml
+    .. code-block:: yaml
 
-    docker:
-      client:
-        stack:
-          django_web:
-            enabled: true
-            update: true
-            environment:
-              SOMEVAR: somevalue
-            version: "3.1"
-            service:
-              db:
-                image: postgres
-              web:
-                image: djangoapp
-                volumes:
-                  - /srv/volumes/django:/srv/django
-                ports:
-                  - 8000:8000
-                depends_on:
-                  - db
+        docker:
+          client:
+            stack:
+              django_web:
+                enabled: true
+                update: true
+                environment:
+                  SOMEVAR: somevalue
+                version: "3.1"
+                service:
+                  db:
+                    image: postgres
+                  web:
+                    image: djangoapp
+                    volumes:
+                      - /srv/volumes/django:/srv/django
+                    ports:
+                      - 8000:8000
+                    depends_on:
+                      - db
 
-Compose
-^^^^^^^
+  * Compose
 
-There are three options how to install docker-compose:
+    You can install ``docker-compose`` using one of the following options:
 
-- distribution package (default)
-- using Pip
-- using Docker container
+    - Distribution package (default)
+    - Using Pip
+    - Using Docker container
 
-Install docker-compose using Docker (default is distribution package)
+    Install ``docker-compose`` using Docker (default is distribution package):
 
-.. code-block:: yaml
+    .. code-block:: yaml
 
-    docker:
-      client:
-        compose:
-          source:
-            engine: docker
-            image: docker/compose:1.8.0
-          django_web:
-            # Run up action, any positional argument to docker-compose CLI
-            # If not defined, only docker-compose.yml is generated
-            status: up
-            # Run image pull every time state is run triggering container
-            # restart in case it's changed
-            pull: true
-            environment:
-              SOMEVAR: somevalue
-            service:
-              db:
-                image: postgres
-              web:
-                image: djangoapp
-                volumes:
-                  - /srv/volumes/django:/srv/django
-                ports:
-                  - 8000:8000
-                depends_on:
-                  - db
+       docker:
+         client:
+           compose:
+             source:
+               engine: docker
+               image: docker/compose:1.8.0
+             django_web:
+               # Run up action, any positional argument to docker-compose CLI
+               # If not defined, only docker-compose.yml is generated
+               status: up
+               # Run image pull every time state is run triggering container
+               # restart in case it's changed
+               pull: true
+               environment:
+                 SOMEVAR: somevalue
+               service:
+                 db:
+                   image: postgres
+                 web:
+                   image: djangoapp
+                   volumes:
+                     - /srv/volumes/django:/srv/django
+                   ports:
+                     - 8000:8000
+                   depends_on:
+                     - db
 
-Registry
-^^^^^^^^
+* Registry
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       client:
@@ -199,8 +197,8 @@ Registry
               name: registry:2
               target_registry: myregistry
 
-Service
--------
+Docker Service configuration samples
+====================================
 
 To deploy service in Swarm mode, you can use ``docker.client.service``:
 
@@ -226,11 +224,12 @@ To deploy service in Swarm mode, you can use ``docker.client.service``:
                   source: /srv/volumes/postgresql/maas
                   destination: /var/lib/postgresql/data
 
+Docker Registry configuration samples
+=====================================
 
-Docker Registry
----------------
+* Basic Docker Registry configuration:
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       registry:
@@ -261,9 +260,9 @@ Docker Registry
               to:
                 - name@receivehost.com
 
-Docker login to private registry
+* Docker login to private registry:
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
     docker:
       host:
@@ -278,30 +277,28 @@ Docker login to private registry
             user: username2
             password: password2
 
+Docker container service management configuration samples
+=========================================================
 
-Docker container service management
------------------------------------
+* Start a service in a container:
 
-Enforce the service in container is started
+  .. code-block:: yaml
 
-.. code-block:: yaml
+     contrail_control_started:
+       dockerng_service.start:
+         - container: f020d0d3efa8
+         - service: contrail-control
 
-    contrail_control_started:
-      dockerng_service.start:
-        - container: f020d0d3efa8
-        - service: contrail-control
+  or
 
-or
+  .. code-block:: yaml
 
-.. code-block:: yaml
+     contrail_control_started:
+       dockerng_service.start:
+         - container: contrail_controller
+         - service: contrail-control
 
-    contrail_control_started:
-      dockerng_service.start:
-        - container: contrail_controller
-        - service: contrail-control
-
-
-Enforce the service in container is stoped
+* Stop a service in a container:
 
 .. code-block:: yaml
 
@@ -310,7 +307,7 @@ Enforce the service in container is stoped
         - container: f020d0d3efa8
         - service: contrail-control
 
-Enforce the service in container will be restarted
+* Restart a service in a container:
 
 .. code-block:: yaml
 
@@ -319,7 +316,7 @@ Enforce the service in container will be restarted
         - container: f020d0d3efa8
         - service: contrail-control
 
-Enforce the service in container is enabled
+* Enable a service in a container:
 
 .. code-block:: yaml
 
@@ -328,7 +325,7 @@ Enforce the service in container is enabled
         - container: f020d0d3efa8
         - service: contrail-control
 
-Enforce the service in container is disabled
+* Disable a service in a container:
 
 .. code-block:: yaml
 
@@ -337,43 +334,32 @@ Enforce the service in container is disabled
         - container: f020d0d3efa8
         - service: contrail-control
 
-
-More Information
-================
+**Read more**
 
 * https://docs.docker.com/installation/ubuntulinux/
 * https://github.com/saltstack-formulas/docker-formula
 
+**Documentation and bugs**
 
-Documentation and Bugs
-======================
+* http://salt-formulas.readthedocs.io/
+   Learn how to install and update salt-formulas
 
-To learn how to install and update salt-formulas, consult the documentation
-available online at:
+* https://github.com/salt-formulas/salt-formula-docker/issues
+   In the unfortunate event that bugs are discovered, report the issue to the
+   appropriate issue tracker. Use the Github issue tracker for a specific salt
+   formula
 
-    http://salt-formulas.readthedocs.io/
+* https://launchpad.net/salt-formulas
+   For feature requests, bug reports, or blueprints affecting the entire
+   ecosystem, use the Launchpad salt-formulas project
 
-In the unfortunate event that bugs are discovered, they should be reported to
-the appropriate issue tracker. Use Github issue tracker for specific salt
-formula:
+* https://launchpad.net/~salt-formulas-users
+   Join the salt-formulas-users team and subscribe to mailing list if required
 
-    https://github.com/salt-formulas/salt-formula-docker/issues
+* https://github.com/salt-formulas/salt-formula-docker
+   Develop the salt-formulas projects in the master branch and then submit pull
+   requests against a specific formula
 
-For feature requests, bug reports or blueprints affecting entire ecosystem,
-use Launchpad salt-formulas project:
-
-    https://launchpad.net/salt-formulas
-
-You can also join salt-formulas-users team and subscribe to mailing list:
-
-    https://launchpad.net/~salt-formulas-users
-
-Developers wishing to work on the salt-formulas projects should always base
-their work on master branch and submit pull request against specific formula.
-
-    https://github.com/salt-formulas/salt-formula-docker
-
-Any questions or feedback is always welcome so feel free to join our IRC
-channel:
-
-    #salt-formulas @ irc.freenode.net
+* #salt-formulas @ irc.freenode.net
+   Use this IRC channel in case of any questions or feedback which is always
+   welcome
