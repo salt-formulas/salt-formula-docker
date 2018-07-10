@@ -89,6 +89,7 @@ Container
 
     docker:
       client:
+        enable: true
         container:
           jenkins:
             # Don't start automatically
@@ -122,6 +123,7 @@ Stack
 
     docker:
       client:
+        enable: true
         stack:
           django_web:
             enabled: true
@@ -156,6 +158,7 @@ Install docker-compose using Docker (default is distribution package)
 
     docker:
       client:
+        enable: true
         compose:
           source:
             engine: docker
@@ -188,6 +191,7 @@ Registry
 
     docker:
       client:
+        enable: true
         registry:
           target_registry: apt:5000
           image:
@@ -209,6 +213,7 @@ To deploy service in Swarm mode, you can use ``docker.client.service``:
     parameters:
       docker:
         client:
+        enable: true
           service:
             postgresql:
               environment:
