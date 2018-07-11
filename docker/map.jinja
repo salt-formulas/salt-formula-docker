@@ -1,7 +1,7 @@
 
 {% set host = salt['grains.filter_by']({
     'CentOS': {
-        'pkgs': ['docker-io'],
+        'pkgs': ['docker'],
         'service': 'docker',
     },
     'Debian': {
