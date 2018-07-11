@@ -1,6 +1,6 @@
 {% from "docker/map.jinja" import host with context %}
 
-{%- if host.enabled %}
+{%- if host.get('enabled', False) %}
 
 docker_packages:
   pkg.installed:
