@@ -22,10 +22,6 @@ except ImportError:
 
 __opts__ = {}
 __virtualname__ = 'dockerng_service'
-salt_version = __salt__['grains.get']('saltversioninfo', default=[2017,7,6])
-docker_module = 'docker'
-if salt_version < [2017,7]:
-    docker_module = 'dockerng'
 
 
 def __virtual__():
@@ -36,10 +32,16 @@ def __virtual__():
         return __virtualname__
     return (False, 'dockerio execution module not loaded: docker python library not available.')
 
+def _docker_module():
+    salt_version = __salt__['grains.get']('saltversioninfo', default=[2017,7,6])
+    if salt_version < [2017,7]:
+      return 'dockerng'
+    else:
+      return 'docker'
 
 def status(container, service):
     cmd = "systemctl show " + service + " -p ActiveState,SubState,UnitFileState"
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     data = data.splitlines()
     result = dict(s.split('=') for s in data)
     return result
@@ -47,7 +49,7 @@ def status(container, service):
 
 def status_retcode(container, service):
     cmd = "systemctl show " + service + " -p ActiveState,SubState,UnitFileState"
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     data = data.splitlines()
     result = dict(s.split('=') for s in data)
     if result['ActiveState'] == "active" and result['SubState'] == "running":
@@ -57,7 +59,7 @@ def status_retcode(container, service):
 
 def restart(container, service):
     cmd = "systemctl restart " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
@@ -65,7 +67,7 @@ def restart(container, service):
 
 def stop(container, service):
     cmd = "systemctl stop " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
@@ -73,7 +75,7 @@ def stop(container, service):
 
 def start(container, service):
     cmd = "systemctl start " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
@@ -81,7 +83,7 @@ def start(container, service):
 
 def enable(container, service):
     cmd = "systemctl enable " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
@@ -89,7 +91,7 @@ def enable(container, service):
 
 def reload(container, service):
     cmd = "systemctl reload " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
@@ -97,7 +99,7 @@ def reload(container, service):
 
 def disable(container, service):
     cmd = "systemctl disable " + service
-    data =  __salt__[docker_module + '.run'](container, cmd)
+    data =  __salt__[_docker_module() + '.run'](container, cmd)
     if len(data) > 0:
         return False
     return True
