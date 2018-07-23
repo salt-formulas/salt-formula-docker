@@ -74,7 +74,7 @@ docker_stack_{{ app }}:
         retry=5
         i=1;
         while [[ $i -lt $retry ]]; do
-          docker stack deploy --compose-file docker-compose.yml {{ app }};
+          docker stack deploy --compose-file docker-compose.yml --with-registry-auth {{ app }};
           ret=$?;
           if [[ $ret -eq 0 ]]; then echo 'Stack created'; break;
           else
@@ -88,7 +88,7 @@ docker_stack_{{ app }}:
         done;
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
-    - user: {{ compose.user|default("root") }}
+    - runas: {{ compose.user|default("root") }}
     - unless: "docker stack ls | grep '{{ app }}'"
     - require:
       - file: docker_{{ app }}_env
@@ -100,7 +100,7 @@ docker_stack_{{ app }}_update:
         retry=5
         i=1;
         while [[ $i -lt $retry ]]; do
-          docker stack deploy --compose-file docker-compose.yml {{ app }};
+          docker stack deploy --compose-file docker-compose.yml --with-registry-auth {{ app }};
           ret=$?;
           if [[ $ret -eq 0 ]]; then echo 'Stack updated'; break;
           else
@@ -114,7 +114,7 @@ docker_stack_{{ app }}_update:
         done;
     - shell: /bin/bash
     - cwd: {{ client.compose.base }}/{{ app }}
-    - user: {{ compose.user|default("root") }}
+    - runas: {{ compose.user|default("root") }}
     - require:
       - cmd: docker_stack_{{ app }}
     - watch:
@@ -126,7 +126,7 @@ docker_stack_{{ app }}_update:
 docker_remove_{{ app }}:
   cmd.run:
     - name: docker stack rm {{ app }}
-    - user: {{ compose.user|default("root") }}
+    - runas: {{ compose.user|default("root") }}
     - onlyif: "docker stack ls | grep '{{ app }}'"
 
     {%- endif %}

@@ -69,10 +69,12 @@ docker_swarm_join:
   cmd.run:
     - name: >
         docker swarm join
-        --token {{ join_token }}
+        --token $JOIN_TOKEN
         {%- if swarm.advertise_addr is defined %} --advertise-addr {{ swarm.advertise_addr }}{%- endif %}
         {%- if swarm.get('bind', {}).get('address', None) %} --listen-addr {{ swarm.bind.address }}{% if swarm.bind.port is defined %}:{{ swarm.bind.port }}{% endif %}{%- endif %}
         {{ swarm.master.host }}:{{ swarm.master.port }}
+    - env:
+        JOIN_TOKEN: {{ join_token }}
     - unless:
       - "test -e /var/lib/docker/swarm/state.json"
       - "grep -q node_id /var/lib/docker/swarm/state.json"

@@ -5,6 +5,11 @@ configs:
   {{ compose.config|yaml(False)|indent(2) }}
 {%- endif %}
 
+{%- for key, value in compose.items() if key.startswith('x-') %}
+{{ key }}:
+  {{ value|yaml(False)|indent(2) }}
+{%- endfor %}
+
 services:
   {%- for name, srv in service.iteritems() %}
   {%- set env_file_set = False %}
