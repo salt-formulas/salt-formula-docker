@@ -5,7 +5,6 @@
 docker_packages:
   pkg.installed:
   - pkgs: {{ host.pkgs }}
-  - version: {{ host.version }}
 
 {%- if grains.get('virtual_subtype', None) not in ['Docker', 'LXC'] %}
 
