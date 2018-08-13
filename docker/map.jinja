@@ -3,18 +3,22 @@
     'CentOS': {
         'pkgs': ['docker'],
         'service': 'docker',
+        'version': 'latest',
     },
     'Debian': {
         'pkgs': ['docker.io'],
         'service': 'docker',
+        'version': 'latest',
     },
     'RedHat': {
         'pkgs': ['iptables', 'lxc-docker'],
         'service': 'docker',
+        'version': 'latest',
     },
     'Ubuntu': {
         'pkgs': ['docker-engine', 'python-docker'],
         'service': 'docker',
+        'version': 'latest',
     },
 }, grain='os', merge=salt['pillar.get']('docker:host')) %}
 
