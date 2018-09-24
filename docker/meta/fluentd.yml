@@ -4,6 +4,7 @@ agent:
   config:
     label:
       docker:
+        enabled: false
         input:
           container:
             type: tail
