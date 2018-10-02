@@ -61,6 +61,7 @@ include:
     - start: {{ container.start|default(True) }}
     - user: {{ container.user|default("root") }}
     - image: {{container.image}}
+    - privileged: {{ container.privileged|default(False) }}
   {%- if 'command' in container %}
     - command: {{container.command}}
   {%- endif %}
