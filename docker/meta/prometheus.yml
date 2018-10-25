@@ -28,11 +28,10 @@ server:
 {%- if client.get('enabled', False) %}
   {%- for stack_name, stack in client.get('stack', {})|dictsort %}
     {%- for service_name, service in stack.get('service', {})|dictsort %}
-      {%- if service.get('deploy', {}).replicas is defined %}
-        {%- set full_service_name = "{}_{}".format(stack_name, service_name) %}
-        {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
-        {%- set label_selector = 'service_name="{}_{}"'.format(stack_name, service_name) %}
-        {%- if service.deploy.replicas > 1 %}
+      {%- set full_service_name = "{}_{}".format(stack_name, service_name) %}
+      {%- set camel_case_name = full_service_name.split('_')|map('capitalize')|join('')|replace('-', '') %}
+      {%- set label_selector = 'service_name="{}_{}"'.format(stack_name, service_name) %}
+      {%- if service.get('deploy', {}).get('replicas', 1) > 1 %}
     DockerService{{ camel_case_name }}ReplicasDownMinor:
       if: >-
         {{ service.deploy.replicas }} - min(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) >= {{ service.deploy.replicas }} * {{ monitoring.replicas_failed_warning_threshold_percent }}
@@ -57,7 +56,7 @@ server:
         summary: "{%- endraw %}{{monitoring.replicas_failed_critical_threshold_percent*100}}%{%- raw %} of Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down"
         description: "{{ $value }} Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service replicas are down for 2 minutes."
   {%- endraw %}
-        {%- endif %}
+      {%- endif %}
     DockerService{{ camel_case_name }}Outage:
       if: >-
         docker_swarm_tasks_running{{ '{' + label_selector + '}' }} == 0 or absent(docker_swarm_tasks_running{{ '{' + label_selector + '}' }}) == 1
@@ -70,7 +69,6 @@ server:
         summary: "Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' service outage"
         description: "All Docker Swarm '{%- endraw %}{{ full_service_name }}{%- raw %}' replicas are down for 2 minutes."
   {%- endraw %}
-      {%- endif %}
     {%- endfor %}
   {%- endfor %}
 {%- endif %}
