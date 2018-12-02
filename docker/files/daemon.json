@@ -3,7 +3,7 @@
 {#- legacy and backward compatibility -#}
 
 {%- if 'experimental' not in host.get('options') and host.experimental is defined %}
-  {% do host.update({"experimental": host.experimental}) %}
+  {% do host.options.update({"experimental": host.experimental}) %}
 {%- endif -%}
 
 {%- if 'insecure-registries' not in host.get('options') and host.insecure_registries is defined %}
