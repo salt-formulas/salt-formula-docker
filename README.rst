@@ -19,6 +19,13 @@ Docker host configuration samples
 
     docker:
       host:
+        pkgs:
+          - docker-ce-selinux: 17.03.2.ce-1-el7.centos
+          - docker-ce: 17.03.2.ce-1-el7.centos
+        hold: true
+        update_holds: true
+        setopt: 
+          - obsoletes=0
         enabled: true
         options:
           bip: 172.31.255.1/16

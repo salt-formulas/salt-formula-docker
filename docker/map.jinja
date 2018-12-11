@@ -1,8 +1,11 @@
 
 {% set host = salt['grains.filter_by']({
     'CentOS': {
-        'pkgs': ['docker-io'],
+        'pkgs': ['docker'],
         'service': 'docker',
+        'hold': 'false',
+        'update_holds': 'false',
+        'setopt': ['obsoletes=1'],
     },
     'Debian': {
         'pkgs': ['docker.io'],

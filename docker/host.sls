@@ -5,6 +5,9 @@
 docker_packages:
   pkg.installed:
   - pkgs: {{ host.pkgs }}
+  - hold: {{ host.hold }}
+  - update_holds: {{ host.update_holds }}
+  - setopt: {{ host.setopt }}
 
 {%- if grains.get('virtual_subtype', None) not in ['Docker', 'LXC'] %}
 
