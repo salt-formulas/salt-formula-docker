@@ -3,7 +3,7 @@
 
 docker_registry_packages:
   pkg.installed:
-    - pkgs: {{ registry.pkgs }}
+    - pkgs: {{ registry.pkgs | json }}
     - watch_in:
       - service: docker_registry_service
 
