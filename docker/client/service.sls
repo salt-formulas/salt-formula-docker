@@ -36,11 +36,15 @@ docker_service_{{ name }}_create:
         {%- if service.mode is defined %} --mode {{ service.mode }}{%- endif %}
         {%- if service.endpoint is defined %} --endpoint-mode {{ service.endpoint }}{%- endif %}
         {%- if service.hostname is defined %} --hostname {{ service.hostname }}{%- endif %}
+        {%- if service.placement_pref is defined %} --placement-pref {{ service.placement_pref }}{%- endif %}
         {%- if service.constraint is defined %} --constraint {{ service.constraint }}{%- endif %}
         {%- for constraint in service.get('constraints', []) %} --constraint {{ constraint }}{%- endfor %}
         {%- for name, volume in service.get('volume', {}).iteritems() %} --mount {% for key, value in volume.iteritems() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}{%- endfor %}
+        {%- for param, value in service.get('stop', {}).iteritems() %} --stop-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('rollback', {}).iteritems() %} --rollback-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('health', {}).iteritems() %} --health-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('log', {}).iteritems() %} --log-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
@@ -69,8 +73,11 @@ docker_service_{{ name }}_update:
         {%- if service.user is defined %} --user {{ service.user }}{%- endif %}
         {%- if service.workdir is defined %} --workdir {{ service.workdir }}{%- endif %}
         {%- if service.endpoint is defined %} --endpoint-mode {{ service.endpoint }}{%- endif %}
+        {%- for param, value in service.get('stop', {}).iteritems() %} --stop-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('rollback', {}).iteritems() %} --rollback-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('health', {}).iteritems() %} --health-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('log', {}).iteritems() %} --log-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
         {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}

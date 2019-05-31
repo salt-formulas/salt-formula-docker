@@ -83,8 +83,10 @@ docker_service:
 
 docker_{{ registry.get('address', name) }}_login:
   cmd.run:
-  - name: 'docker login -u {{ registry.user }} -p {{ registry.password }}{% if registry.get('address') %} {{ registry.address }}{% endif %}'
-  - user: {{ registry.get('system_user', 'root') }}
+  - name: 'docker login -u {{ registry.user }} -p $REGISTRY_PASSWORD{% if registry.get('address') %} {{ registry.address }}{% endif %}'
+  - env:
+      REGISTRY_PASSWORD: {{ registry.password }}
+  - runas: {{ registry.get('system_user', 'root') }}
   - unless: grep {{ registry.address|default('https://index.docker.io/v1/') }} {{ salt['user.info'](registry.get('system_user', 'root')).home }}/.docker/config.json
 
 {%- endfor %}
