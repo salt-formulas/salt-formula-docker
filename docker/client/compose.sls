@@ -43,7 +43,7 @@ docker_compose:
       - file: docker_compose_wrapper
 {%- endif %}
 
-{%- for app, compose in client.compose.iteritems() %}
+{%- for app, compose in client.compose.items() %}
 {%- if compose.service is defined %}
 
 docker_{{ app }}_dir:

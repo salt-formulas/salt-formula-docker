@@ -3,10 +3,10 @@
 include:
   - docker.client
 
-{%- for name, service in client.get('service', {}).iteritems() %}
+{%- for name, service in client.get('service', {}).items() %}
 {%- if service.get('enabled', True) %}
 
-{%- for vname, volume in service.get('volume', {}).iteritems() %}
+{%- for vname, volume in service.get('volume', {}).items() %}
 {%- if volume.get('type', 'bind') == 'bind' %}
 docker_service_{{ name }}_volume_{{ vname }}:
   file.directory:
@@ -25,10 +25,10 @@ docker_service_{{ name }}_create:
         --name {{ name }}
         --with-registry-auth
         --detach=true
-        {%- for env, value in service.get('environment', {}).iteritems() %} -e {{ env }}="{{ value }}"{%- endfor %}
+        {%- for env, value in service.get('environment', {}).items() %} -e {{ env }}="{{ value }}"{%- endfor %}
         {%- for port in service.get('ports', []) %} -p {{ port }}{%- endfor %}
-        {%- for name, host in service.get('hosts', {}).iteritems() %} --host {{ host.get('name', name) }}:{{ host.address }}{%- endfor %}
-        {%- for label, value in service.get('label', {}).iteritems() %} -l {{ label }}="{{ value }}"{%- endfor %}
+        {%- for name, host in service.get('hosts', {}).items() %} --host {{ host.get('name', name) }}:{{ host.address }}{%- endfor %}
+        {%- for label, value in service.get('label', {}).items() %} -l {{ label }}="{{ value }}"{%- endfor %}
         {%- if service.network is defined %} --network {{ service.network }}{%- endif %}
         {%- if service.replicas is defined %} --replicas {{ service.replicas }}{%- endif %}
         {%- if service.user is defined %} --user {{ service.user }}{%- endif %}
@@ -38,12 +38,12 @@ docker_service_{{ name }}_create:
         {%- if service.hostname is defined %} --hostname {{ service.hostname }}{%- endif %}
         {%- if service.constraint is defined %} --constraint {{ service.constraint }}{%- endif %}
         {%- for constraint in service.get('constraints', []) %} --constraint {{ constraint }}{%- endfor %}
-        {%- for name, volume in service.get('volume', {}).iteritems() %} --mount {% for key, value in volume.iteritems() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}{%- endfor %}
-        {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('log', {}).iteritems() %} --log-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
+        {%- for name, volume in service.get('volume', {}).items() %} --mount {% for key, value in volume.items() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}{%- endfor %}
+        {%- for param, value in service.get('restart', {}).items() %} --restart-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('update', {}).items() %} --update-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('log', {}).items() %} --log-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('limit', {}).items() %} --limit-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('reserve', {}).items() %} --reserve-{{ param }} {{ value }}{%- endfor %}
         {{ service.image }}
         {%- if service.command is defined %} {{ service.command }}{%- endif %}
         {%- for arg in service.get('args', []) %} {{ arg }}{%- endfor %};
@@ -69,11 +69,11 @@ docker_service_{{ name }}_update:
         {%- if service.user is defined %} --user {{ service.user }}{%- endif %}
         {%- if service.workdir is defined %} --workdir {{ service.workdir }}{%- endif %}
         {%- if service.endpoint is defined %} --endpoint-mode {{ service.endpoint }}{%- endif %}
-        {%- for param, value in service.get('restart', {}).iteritems() %} --restart-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('update', {}).iteritems() %} --update-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('log', {}).iteritems() %} --log-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('limit', {}).iteritems() %} --limit-{{ param }} {{ value }}{%- endfor %}
-        {%- for param, value in service.get('reserve', {}).iteritems() %} --reserve-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('restart', {}).items() %} --restart-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('update', {}).items() %} --update-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('log', {}).items() %} --log-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('limit', {}).items() %} --limit-{{ param }} {{ value }}{%- endfor %}
+        {%- for param, value in service.get('reserve', {}).items() %} --reserve-{{ param }} {{ value }}{%- endfor %}
         --image {{ service.image }}
         {{ name }};
         ret=$?;
