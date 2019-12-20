@@ -3,7 +3,7 @@
 include:
   - docker.client
 
-{%- for name, network in client.get('network', {}).iteritems() %}
+{%- for name, network in client.get('network', {}).items() %}
 {%- if network.get('enabled', True) %}
 
 docker_network_{{ name }}_create:
@@ -18,7 +18,7 @@ docker_network_{{ name }}_create:
         {%- if network.iprange is defined %} --ip-range {{ network.iprange }} {%- endif %}
         {%- if network.ipamdriver is defined %} --ipam-driver {{ network.ipamdriver }} {%- endif %}
         {%- if network.subnet is defined %} --subnet {{ network.subnet }} {%- endif %}
-        {%- for param,value in network.get('opt', {}).iteritems() %} --opt {{ param }}={{ value }} {%- endfor %}
+        {%- for param,value in network.get('opt', {}).items() %} --opt {{ param }}={{ value }} {%- endfor %}
         {{ name }}
     - unless: "docker network ls | grep {{ name }}"
 

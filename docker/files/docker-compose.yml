@@ -6,7 +6,7 @@ configs:
 {%- endif %}
 
 services:
-  {%- for name, srv in service.iteritems() %}
+  {%- for name, srv in service.items() %}
   {%- set env_file_set = False %}
   {{ name }}:
     {%- if 'env_file' in srv.keys() %}{%- set env_file_set = True %}{%- endif %}
@@ -18,7 +18,7 @@ services:
 
 {%- if volume|default({}) %}
 volumes:
-{%- for key, value in volume.iteritems() %}
+{%- for key, value in volume.items() %}
   {%- if value is mapping %}
   {{ key }}:
     {{ value|yaml(False)|indent(4) }}
@@ -31,7 +31,7 @@ volumes:
 
 {%- if network|default({}) %}
 networks:
-{%- for key, value in network.iteritems() %}
+{%- for key, value in network.items() %}
   {%- if value is mapping %}
   {{ key }}:
     {{ value|yaml(False)|indent(4) }}

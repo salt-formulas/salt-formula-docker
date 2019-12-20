@@ -37,15 +37,15 @@ doc:
         {%- if client.get('service', {}) %}
         services:
           value:
-            {%- for name, service in client.service.iteritems() %}
+            {%- for name, service in client.service.items() %}
             - "{{ name }} (image {{ service.image }})"
             {%- endfor %}
         {%- endif %}
         {%- if client.get('stack', {}) %}
         stacks:
           value:
-            {%- for name, stack in client.stack.iteritems() %}
-            {%- for svc_name, service in stack.service.iteritems() %}
+            {%- for name, stack in client.stack.items() %}
+            {%- for svc_name, service in stack.service.items() %}
             - "{{ name }}-{{ svc_name }} (image {{ service.image }})"
             {%- endfor %}
             {%- endfor %}

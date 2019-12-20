@@ -3,7 +3,7 @@
 include:
   - docker.client
 
-{%- for app, compose in client.stack.iteritems() %}
+{%- for app, compose in client.stack.items() %}
   {%- if compose.service is defined %}
 
 docker_{{ app }}_dir:
@@ -46,7 +46,7 @@ docker_{{ app }}_env:
 
     {%- endif %}
 
-    {%- for name, service in compose.service.iteritems() %}
+    {%- for name, service in compose.service.items() %}
       {%- for volume in service.get('volumes', []) %}
         {%- if volume is string and ':' in volume %}
           {%- set path = volume.split(':')[0] %}
