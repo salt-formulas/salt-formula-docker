@@ -83,7 +83,7 @@ docker_swarm_join:
         {{ swarm.master.host }}:{{ swarm.master.port }}
     - unless:
       - "test -e /var/lib/docker/swarm/state.json"
-      - "grep -q node_id /var/lib/docker/swarm/state.json"
+      - "grep -Eq '\"(node_id|addr)\"' /var/lib/docker/swarm/state.json"
     - require:
       - service: docker_service
 
