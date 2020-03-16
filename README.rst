@@ -78,8 +78,15 @@ will initialize the swarm.
           host: 192.168.1.5
           port: 2377
 
+          # Optionally, you can make the discovery faster by providing slave
+          # nodes a target to the master node.
+          # If a target is specified and any of the targetted nodes expose a
+          # join token in their grains, this token will be used to join the
+          # cluster, ignoring any advertise address.
+          # target: 'swarm-master*'
+
 The token to join to the master node is obtained from grains using
-``salt.mine``.  In case of any ``join_token undefined`` issues, verify that
+``salt.mine``.  In case of any ``join_token unknown`` issues, verify that
 you have ``docker_swarm_`` grains available.
 
 Docker client configuration samples
