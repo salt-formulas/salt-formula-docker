@@ -40,13 +40,13 @@ def main():
 
         if os.path.exists('/var/lib/docker/swarm/state.json'):
             with open('/var/lib/docker/swarm/state.json') as fh:
-                state = yaml.load(fh)
+                state = yaml.safe_load(fh)
                 for key, value in state[0].items():
                     output["docker_swarm_%s" % key] = value
 
         if os.path.exists('/var/lib/docker/swarm/docker-state.json'):
             with open('/var/lib/docker/swarm/docker-state.json') as fh:
-                state = yaml.load(fh)
+                state = yaml.safe_load(fh)
                 for key, value in state.items():
                     output["docker_swarm_%s" % key] = value
 
